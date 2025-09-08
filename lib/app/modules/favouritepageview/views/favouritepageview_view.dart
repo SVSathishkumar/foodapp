@@ -14,7 +14,7 @@ class FavouritepageviewView extends GetView<FavouritepageviewController> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: isDark ? Colors.black : Colors.white,
-      
+
         body: Obx(() {
           if (controller.favouriteItems.isEmpty) {
             return Center(
@@ -30,9 +30,9 @@ class FavouritepageviewView extends GetView<FavouritepageviewController> {
                       fit: BoxFit.contain,
                     ),
                   ),
-      
+
                   SizedBox(height: 12),
-      
+
                   Text(
                     'No favorites yet!',
                     style: GoogleFonts.poppins(
@@ -43,9 +43,9 @@ class FavouritepageviewView extends GetView<FavouritepageviewController> {
                           : Colors.black,
                     ),
                   ),
-      
+
                   SizedBox(height: 6),
-      
+
                   Text(
                     'Looks like you haven’t added any favorites yet.\nStart exploring and save what you love!',
                     textAlign: TextAlign.center,
@@ -60,16 +60,19 @@ class FavouritepageviewView extends GetView<FavouritepageviewController> {
               ),
             );
           }
-      
+
           return ListView.builder(
             padding: const EdgeInsets.all(16),
             itemCount: controller.favouriteItems.length,
             itemBuilder: (context, index) {
               final item = controller.favouriteItems[index];
-      
+
               return TweenAnimationBuilder<Offset>(
                 duration: const Duration(milliseconds: 800),
-                tween: Tween<Offset>(begin: const Offset(0, 1), end: Offset.zero),
+                tween: Tween<Offset>(
+                  begin: const Offset(0, 1),
+                  end: Offset.zero,
+                ),
                 curve: Curves.easeOut,
                 builder: (context, offset, child) =>
                     Transform.translate(offset: offset * 50, child: child),
@@ -104,7 +107,11 @@ class FavouritepageviewView extends GetView<FavouritepageviewController> {
                       duration: const Duration(seconds: 3),
                       titleText: Row(
                         children: [
-                          Icon(Icons.check_circle, color: Colors.white, size: 20),
+                          Icon(
+                            Icons.check_circle,
+                            color: Colors.white,
+                            size: 20,
+                          ),
                           const Text(
                             "Removed",
                             style: TextStyle(
@@ -117,7 +124,10 @@ class FavouritepageviewView extends GetView<FavouritepageviewController> {
                       ),
                       messageText: Text(
                         "${item['title']} has been removed\nfrom your favourites successfully.\nYou can add it back anytime.",
-                        style: const TextStyle(fontSize: 14, color: Colors.white),
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.white,
+                        ),
                       ),
                     );
                   },
@@ -160,7 +170,9 @@ class FavouritepageviewView extends GetView<FavouritepageviewController> {
                                       item['title'] ?? '',
                                       style: GoogleFonts.poppins(
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 11,
+                                        fontSize:
+                                            MediaQuery.of(context).size.width *
+                                            0.029,
                                         color: isDark
                                             ? Colors.white70
                                             : Colors.grey.shade700,
@@ -206,8 +218,8 @@ class FavouritepageviewView extends GetView<FavouritepageviewController> {
                             decoration: BoxDecoration(
                               color: isDark
                                   ? Colors.yellow[600] // dark mode
-                                  : Colors.pink ,// light mode
-      
+                                  : Colors.pink, // light mode
+
                               borderRadius: BorderRadius.circular(13),
                               boxShadow: [
                                 BoxShadow(

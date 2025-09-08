@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:foodapp/app/modules/addcartpageviews/views/addcartpageviews_view.dart';
 import 'package:foodapp/app/modules/favouritepageview/controllers/favouritepageview_controller.dart';
@@ -9,163 +8,51 @@ import 'package:foodapp/app/modules/productdetailspage/views/productdetailspage_
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class BurgerscreenpageView extends StatelessWidget {
-  BurgerscreenpageView({super.key});
+class bisleriWaterPageView extends StatelessWidget {
+  bisleriWaterPageView({super.key});
 
   final FavouritepageviewController controller = Get.find();
 
   final List<Map<String, dynamic>> products = [
-    {"title": "Apple", "price": "₹120/kg", "image": "assets/images/apple.png"},
     {
-      "title": "Banana",
-      "price": "₹40/dozen",
-      "image": "assets/images/banana.png",
-    },
-    {"title": "Mango", "price": "₹150/kg", "image": "assets/images/mango.png"},
-    {
-      "title": "Orange",
-      "price": "₹80/kg",
-      "image": "assets/images/orangee.png",
+      'title': 'Bisleri 500ml',
+      'image': 'assets/images/Bisleriwater4.jpg',
+      'price': '₹80',
     },
     {
-      "title": "Pomegranate",
-      "price": "₹90/kg",
-      "image": "assets/images/Pomegranate.png",
+      'title': 'Bisleri 1 Litre',
+      'image': 'assets/images/Bisleriwater1.png',
+      'price': '₹20',
     },
     {
-      "title": "Grapes (Green & Black)",
-      "price": "₹100/kg",
-      "image": "assets/images/grapesblack.png",
-    },
-    {"title": "Papaya", "price": "₹30/kg", "image": "assets/images/papaya.png"},
-    {
-      "title": "Watermelon",
-      "price": "₹25/kg",
-      "image": "assets/images/Watermelon.png",
+      'title': 'Bisleri 2 Litre',
+      'image': 'assets/images/Bisleriwater4.jpg',
+      'price': '₹35',
     },
     {
-      "title": "Muskmelon (Cantaloupe)",
-      "price": "₹40/kg",
-      "image": "assets/images/Muskmelon.png",
+      'title': 'Bisleri 5 Litre',
+      'image': 'assets/images/Bisleriwater5.jpg',
+      'price': '₹70',
     },
     {
-      "title": "Pineapple",
-      "price": "₹60/each",
-      "image": "assets/images/Pineapple.png",
-    },
-    {"title": "Guava", "price": "₹50/kg", "image": "assets/images/Guava.png"},
-    {
-      "title": "Sapota (Chikoo)",
-      "price": "₹80/kg",
-      "image": "assets/images/sapota.png",
+      'title': 'Bisleri 20 Litre Can',
+      'image': 'assets/images/Bisleriwater6.jpg',
+      'price': '₹80',
     },
     {
-      "title": "Custard apple (Seethapazham)",
-      "price": "₹90/kg",
-      "image": "assets/images/Custard apple.png",
+      'title': 'Bisleri Soda 750ml',
+      'image': 'assets/images/Bisleriwater7.jpg',
+      'price': '₹25',
     },
-    {
-      "title": "Jackfruit",
-      "price": "₹30/kg",
-      "image": "assets/images/Jackfruit.png",
+      {
+      'title': 'Bisleri Soda 700ml',
+      'image': 'assets/images/Bisleri8.png',
+      'price': '₹35',
     },
-    {
-      "title": "Dragon fruit",
-      "price": "₹250/kg",
-      "image": "assets/images/Dragon fruit.png",
-    },
-    {"title": "Kiwi", "price": "₹300/kg", "image": "assets/images/Kiwi.png"},
-    {
-      "title": "Strawberry",
-      "price": "₹350/kg",
-      "image": "assets/images/Strawberry.png",
-    },
-    {
-      "title": "Blueberry (Imported)",
-      "price": "₹800/kg",
-      "image": "assets/images/Blueberry.png",
-    },
-    {
-      "title": "Lychee",
-      "price": "₹180/kg",
-      "image": "assets/images/Lychee.png",
-    },
-    {"title": "Pear", "price": "₹120/kg", "image": "assets/images/pear.png"},
-    {"title": "Plum", "price": "₹150/kg", "image": "assets/images/Plum.png"},
-    {"title": "Peach", "price": "₹200/kg", "image": "assets/images/Peach.png"},
-    {
-      "title": "Apricot",
-      "price": "₹300/kg",
-      "image": "assets/images/Apricot.png",
-    },
-    {
-      "title": "Fig (Anjeer)",
-      "price": "₹250/kg",
-      "image": "assets/images/Fig.png",
-    },
-    {
-      "title": "Avocado",
-      "price": "₹250/kg",
-      "image": "assets/images/Avocado.png",
-    },
-    {
-      "title": "Sweetlime",
-      "price": "₹60/kg",
-      "image": "assets/images/Sweetlime.png",
-    },
-    {"title": "Lemon", "price": "₹80/kg", "image": "assets/images/Lemon.png"},
-    {
-      "title": "Gooseberry",
-      "price": "₹150/kg",
-      "image": "assets/images/Gooseberry.png",
-    },
-    {"title": "Ber", "price": "₹70/kg", "image": "assets/images/Ber.png"},
-    {
-      "title": "Woodapple",
-      "price": "₹40/kg",
-      "image": "assets/images/Woodapple.png",
-    },
-    {
-      "title": "Starfruit",
-      "price": "₹120/kg",
-      "image": "assets/images/Starfruit.png",
-    },
-    {"title": "Jamun", "price": "₹100/kg", "image": "assets/images/Jamun.png"},
-    {
-      "title": "Tamarind",
-      "price": "₹120/kg",
-      "image": "assets/images/Tamarind.png",
-    },
-    {
-      "title": "Coconut",
-      "price": "₹50/each",
-      "image": "assets/images/Coconut.png",
-    },
-    {"title": "Dates", "price": "₹200/kg", "image": "assets/images/Dates.png"},
-    {
-      "title": "Rambutan",
-      "price": "₹350/kg",
-      "image": "assets/images/Rambutan.png",
-    },
-    {
-      "title": "Mangosteen",
-      "price": "₹400/kg",
-      "image": "assets/images/Mangosteen.png",
-    },
-    {
-      "title": "Roseapple",
-      "price": "₹60/kg",
-      "image": "assets/images/Roseapple.png",
-    },
-    {
-      "title": "Indian blackberry",
-      "price": "₹70/kg",
-      "image": "assets/images/Indian blackberry.png",
-    },
-    {
-      "title": "Cherry",
-      "price": "₹600/kg",
-      "image": "assets/images/Cherry.png",
+      {
+      'title': 'Bisleri Soda 800ml',
+      'image': 'assets/images/Bisleriwater9.jpg',
+      'price': '₹40',
     },
   ];
 
@@ -173,28 +60,24 @@ class BurgerscreenpageView extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final textColor = isDark ? Colors.white : Colors.black;
-    final subTextColor = isDark ? Colors.grey[400] : Colors.grey[700];
 
     final size = MediaQuery.of(context).size;
     final screenWidth = size.width;
 
-    // ✅ MediaQuery based scaling
+    // 🔹 Responsive scaling
     final padding = screenWidth * 0.04;
-    final imageSize = screenWidth < 600
-        ? screenWidth * 0.35
-        : screenWidth * 0.20;
-    final titleFontSize = screenWidth < 600 ? 12 : 13;
-    final priceFontSize = screenWidth < 600 ? 12 : 14;
-    final ratingSize = screenWidth < 600 ? 14 : 16;
+    final imageSize = screenWidth * 0.28;
+    final titleFontSize = screenWidth < 600 ? 12.0 : 16.0;
+    final priceFontSize = screenWidth * 0.032;
 
-    // ✅ Responsive grid count
-    final crossAxisCount = screenWidth >600
+    // 🔹 Responsive grid layout
+    final crossAxisCount = screenWidth > 1000
         ? 5
-        : screenWidth > 900
-        ? 4
-        : screenWidth > 600
-        ? 3
-        : 2;
+        : screenWidth > 800
+            ? 4
+            : screenWidth > 600
+                ? 3
+                : 2;
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -202,9 +85,9 @@ class BurgerscreenpageView extends StatelessWidget {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0,
         title: Text(
-          "Fruits Menu",
+          "Bisleri Water",
           style: GoogleFonts.poppins(
-            fontSize: titleFontSize + 2,
+            fontSize: titleFontSize + 4,
             fontWeight: FontWeight.bold,
             color: textColor,
           ),
@@ -215,19 +98,19 @@ class BurgerscreenpageView extends StatelessWidget {
               IconButton(
                 icon: Icon(Icons.shopping_cart, color: textColor),
                 onPressed: () {
-                  Get.to(() => const AddcartpageviewsView());
+                  Get.to(() => AddcartpageviewsView());
                 },
               ),
               Positioned(
                 right: 6,
                 top: 6,
                 child: CircleAvatar(
-                  radius: screenWidth * 0.018,
+                  radius: screenWidth * 0.02,
                   backgroundColor: Colors.red,
                   child: Text(
                     '2',
                     style: TextStyle(
-                      fontSize: screenWidth * 0.020,
+                      fontSize: screenWidth * 0.025,
                       color: Colors.white,
                     ),
                   ),
@@ -238,7 +121,7 @@ class BurgerscreenpageView extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.notifications_none, color: textColor),
             onPressed: () {
-              Get.to(() =>  NotificationspageView());
+              Get.to(() => NotificationspageView());
             },
           ),
           IconButton(
@@ -254,6 +137,7 @@ class BurgerscreenpageView extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: padding, vertical: 10),
           child: AnimationLimiter(
             child: GridView.builder(
+              physics: const BouncingScrollPhysics(),
               padding: const EdgeInsets.only(bottom: 20),
               itemCount: products.length,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -279,7 +163,7 @@ class BurgerscreenpageView extends StatelessWidget {
                               'images': [product['image']],
                               'title': product['title'],
                               'price': product['price'],
-                              'oldPrice': '₹450',
+                              'oldPrice': '₹100',
                             },
                           );
                         },
@@ -296,11 +180,7 @@ class BurgerscreenpageView extends StatelessWidget {
                                     color: isDark
                                         ? const Color.fromARGB(255, 40, 39, 39)
                                         : const Color.fromARGB(
-                                            255,
-                                            239,
-                                            238,
-                                            238,
-                                          ),
+                                            255, 239, 238, 238),
                                     boxShadow: [
                                       if (!isDark)
                                         BoxShadow(
@@ -318,17 +198,15 @@ class BurgerscreenpageView extends StatelessWidget {
                                   top: 8,
                                   right: 8,
                                   child: Obx(() {
-                                    final isFav = controller.isFavourite(
-                                      product,
-                                    );
+                                    final isFav =
+                                        controller.isFavourite(product);
                                     return GestureDetector(
                                       onTap: () {
                                         controller.toggleFavourite(product);
                                       },
                                       child: Container(
-                                        padding: EdgeInsets.all(
-                                          screenWidth * 0.015,
-                                        ),
+                                        padding:
+                                            EdgeInsets.all(screenWidth * 0.015),
                                         decoration: BoxDecoration(
                                           color: isDark
                                               ? Colors.grey[800]
@@ -337,9 +215,8 @@ class BurgerscreenpageView extends StatelessWidget {
                                           boxShadow: [
                                             if (!isDark)
                                               BoxShadow(
-                                                color: Colors.black.withOpacity(
-                                                  0.1,
-                                                ),
+                                                color: Colors.black
+                                                    .withOpacity(0.1),
                                                 blurRadius: 4,
                                               ),
                                           ],
@@ -365,41 +242,16 @@ class BurgerscreenpageView extends StatelessWidget {
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: GoogleFonts.poppins(
-                                fontSize: titleFontSize.toDouble(),
+                                fontSize: titleFontSize,
                                 fontWeight: FontWeight.w600,
                                 color: textColor,
                               ),
                             ),
                             const SizedBox(height: 4),
-                            if (product["rating"] != null)
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  RatingBarIndicator(
-                                    rating: (product["rating"] as double),
-                                    itemBuilder: (context, _) => const Icon(
-                                      Icons.star,
-                                      color: Colors.amber,
-                                    ),
-                                    itemCount: 5,
-                                    itemSize: ratingSize.toDouble(),
-                                    direction: Axis.horizontal,
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    "(${product['rating']})",
-                                    style: TextStyle(
-                                      fontSize: priceFontSize.toDouble(),
-                                      color: subTextColor,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            const SizedBox(height: 4),
                             Text(
                               product["price"],
                               style: GoogleFonts.poppins(
-                                fontSize: priceFontSize.toDouble(),
+                                fontSize: priceFontSize,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.green,
                               ),

@@ -50,6 +50,10 @@ dependencies:
   deleteable_tile: ^0.0.1-nullsafety.1
   table_calendar: ^3.1.3
   quickalert: ^1.1.0
+  flutter_local_notifications: ^19.4.1
+  android_intent_plus: ^5.3.1
+  font_awesome_flutter: ^10.10.0
+  animations: ^2.0.11
 
 dev_dependencies:
   flutter_test:
@@ -274,6 +278,29 @@ flutter_icons:
     - assets\images\Confetti.json
     - assets\images\orderhistorylogo.png
     - assets\images\Error animation.json
+    - assets\images\Bisleriwater4.jpg
+    - assets\images\Bisleriwater1.png
+    - assets\images\Bisleriwater4.jpg
+    - assets\images\Bisleriwater5.jpg
+    - assets\images\Bisleriwater6.jpg
+    - assets\images\Bisleriwater7.jpg
+    - assets\images\cartegories.png
+    - assets\images\cartegories1.png
+    - assets\images\cartegories2.png
+    - assets\images\cartegories3.png
+    - assets\images\cartegories4.png
+    - assets\images\cartegories5.png
+    - assets\images\cartegories6.png
+    - assets\images\phonescreenpng.jpg
+    - assets\images\fruitsimges.jpg
+    - assets\images\optscreennnnnn.jpg
+    - assets\images\onboscreen2.jpg
+    - assets\images\onboscreen1.jpg
+    - assets\images\onboscreen3.jpg
+    - assets\images\onboscreen4.jpg
+    - assets\images\googlemapicons.png
+    - assets\images\Bisleri8.png
+    - assets\images\Bisleriwater9.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

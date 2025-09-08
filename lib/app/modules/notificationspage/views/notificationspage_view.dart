@@ -2,7 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:foodapp/app/modules/bottomnavgationbar/views/bottomnavgationbar_view.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 import '../controllers/notificationspage_controller.dart';
+
+// 🔔 Notifications plugin global
+final FlutterLocalNotificationsPlugin notificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 
 class NotificationspageView extends StatefulWidget {
   const NotificationspageView({super.key});
@@ -40,6 +47,82 @@ class _NotificationspageViewState extends State<NotificationspageView>
     );
 
     _animationController.forward();
+
+    // 🔔 initialize notifications with timezone
+    initNotifications();
+  }
+
+  /// ✅ Init Notifications
+  Future<void> initNotifications() async {
+    tz.initializeTimeZones();
+    tz.setLocalLocation(tz.getLocation('Asia/Kolkata')); // 👈 Local timezone
+
+    const androidSettings = AndroidInitializationSettings(
+      '@mipmap/ic_launcher',
+    );
+    const iosSettings = DarwinInitializationSettings();
+
+    const initializationSettings = InitializationSettings(
+      android: androidSettings,
+      iOS: iosSettings,
+    );
+
+    await notificationsPlugin.initialize(initializationSettings);
+  }
+
+  // ✅ Instant notification
+  Future<void> showInstantNotification({
+    required int id,
+    required String title,
+    required String body,
+  }) async {
+    const androidDetails = AndroidNotificationDetails(
+      'general_channel', // channel id
+      'General Notifications', // channel name
+      channelDescription: 'General app notifications',
+      importance: Importance.max,
+      priority: Priority.high,
+    );
+
+    const platformDetails = NotificationDetails(
+      android: androidDetails,
+      iOS: DarwinNotificationDetails(),
+    );
+
+    await notificationsPlugin.show(id, title, body, platformDetails);
+  }
+
+  // ✅ Schedule Reminder
+  Future<void> scheduleReminder({
+    required int id,
+    required String title,
+    String? body,
+  }) async {
+    tz.TZDateTime now = tz.TZDateTime.now(tz.local);
+    tz.TZDateTime scheduledDate = now.add(const Duration(seconds: 5));
+
+    await notificationsPlugin.zonedSchedule(
+      id,
+      title,
+      body,
+      scheduledDate,
+      const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'daily_reminder_channel_id',
+          'Daily Reminders',
+          channelDescription: 'Reminder to complete daily habits',
+          importance: Importance.max,
+          priority: Priority.high,
+        ),
+        iOS: DarwinNotificationDetails(),
+      ),
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+    );
+  }
+
+  // ✅ Cancel all notifications
+  Future<void> _cancelNotifications() async {
+    await notificationsPlugin.cancelAll();
   }
 
   @override
@@ -61,8 +144,10 @@ class _NotificationspageViewState extends State<NotificationspageView>
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
-            color: isDark ? const Color.fromARGB(255, 241, 202, 84) : Colors.pink,
-            size: width * 0.06, // responsive back arrow size
+            color: isDark
+                ? const Color.fromARGB(255, 241, 202, 84)
+                : Colors.pink,
+            size: width * 0.06,
           ),
           onPressed: () => Get.to(const BottomnavigationbarView()),
         ),
@@ -71,7 +156,7 @@ class _NotificationspageViewState extends State<NotificationspageView>
           "Notification",
           style: GoogleFonts.poppins(
             color: isDark ? Colors.white : Colors.black,
-            fontSize: width * 0.045, // responsive title size
+            fontSize: width * 0.045,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -84,7 +169,7 @@ class _NotificationspageViewState extends State<NotificationspageView>
               child: Image.asset(
                 "assets/images/notificationsssssssss.png",
                 fit: BoxFit.cover,
-                height: height * 0.35, // responsive background image
+                height: height * 0.35,
               ),
             ),
           ),
@@ -103,7 +188,7 @@ class _NotificationspageViewState extends State<NotificationspageView>
                       context: context,
                       title: "Allow Notifications",
                       description:
-                          "Lorem ipsum dolor sit amet, consectetur sadi pscing elit, sed diam nonummy",
+                          "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
                       value: controller.allowNotifications,
                     ),
                     SizedBox(height: height * 0.04),
@@ -111,7 +196,7 @@ class _NotificationspageViewState extends State<NotificationspageView>
                       context: context,
                       title: "Email Notifications",
                       description:
-                          "Lorem ipsum dolor sit amet, consectetur sadi pscing elit, sed diam nonummy",
+                          "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
                       value: controller.emailNotifications,
                     ),
                     SizedBox(height: height * 0.04),
@@ -119,7 +204,7 @@ class _NotificationspageViewState extends State<NotificationspageView>
                       context: context,
                       title: "Order Notifications",
                       description:
-                          "Lorem ipsum dolor sit amet, consectetur sadi pscing elit, sed diam nonummy",
+                          "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
                       value: controller.orderNotifications,
                     ),
                     SizedBox(height: height * 0.04),
@@ -127,7 +212,7 @@ class _NotificationspageViewState extends State<NotificationspageView>
                       context: context,
                       title: "General Notifications",
                       description:
-                          "Lorem ipsum dolor sit amet, consectetur sadi pscing elit, sed diam nonummy",
+                          "This will send instant + scheduled test notifications.",
                       value: controller.generalNotifications,
                     ),
                     const Spacer(),
@@ -166,14 +251,14 @@ class _NotificationspageViewState extends State<NotificationspageView>
                     title,
                     style: GoogleFonts.poppins(
                       fontWeight: FontWeight.w600,
-                      fontSize: width * 0.04, // responsive title size
+                      fontSize: width * 0.04,
                     ),
                   ),
                   SizedBox(height: height * 0.005),
                   Text(
                     description,
                     style: GoogleFonts.poppins(
-                      fontSize: width * 0.032, // responsive description
+                      fontSize: width * 0.032,
                       color: Colors.grey,
                     ),
                   ),
@@ -182,10 +267,40 @@ class _NotificationspageViewState extends State<NotificationspageView>
             ),
             Switch(
               value: value.value,
-              activeColor: isDark
+              activeThumbColor: isDark
                   ? const Color.fromARGB(255, 237, 200, 87)
                   : Colors.pink,
-              onChanged: (val) => value.value = val,
+              activeTrackColor: isDark
+                  ? const Color.fromARGB(100, 237, 200, 87) // lighter track
+                  : Colors.pinkAccent.withOpacity(0.5),
+              onChanged: (val) async {
+                value.value = val; // update state
+
+                if (title == "General Notifications") {
+                  if (val) {
+                    // ✅ Show instant notification
+                    await showInstantNotification(
+                      id: DateTime.now().millisecondsSinceEpoch.remainder(
+                        100000,
+                      ),
+                      title: title,
+                      body: "This is an instant notification 🚀",
+                    );
+
+                    // ✅ Schedule reminder (e.g., 5 sec later)
+                    await scheduleReminder(
+                      id: DateTime.now().millisecondsSinceEpoch.remainder(
+                        100000,
+                      ),
+                      title: "Scheduled Reminder",
+                      body: "This is your scheduled reminder ⏰",
+                    );
+                  } else {
+                    // ❌ Cancel all notifications when OFF
+                    await _cancelNotifications();
+                  }
+                }
+              },
             ),
           ],
         ),

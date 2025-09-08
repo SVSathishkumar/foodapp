@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 
 class GooglepageviewController extends GetxController {
   // User location
-  final position = Rxn<Position>();
+  final position = Rxn<LatLng>();
   final cameraPosition = Rxn<CameraPosition>();
   StreamSubscription<Position>? positionStream;
 
@@ -17,7 +17,7 @@ class GooglepageviewController extends GetxController {
   BitmapDescriptor? deliveryIcon;
   Timer? _deliveryTimer;
 
-  late GoogleMapController mapController;
+  GoogleMapController? mapController;
 
   @override
   void onInit() {
@@ -31,7 +31,7 @@ class GooglepageviewController extends GetxController {
   }
 
   // Load delivery bike icon from assets
-  void _loadDeliveryIcon() async {
+  Future<void> _loadDeliveryIcon() async {
     deliveryIcon = await BitmapDescriptor.fromAssetImage(
       const ImageConfiguration(size: Size(42, 42)),
       'assets/images/iconsbike.png',
@@ -39,18 +39,21 @@ class GooglepageviewController extends GetxController {
   }
 
   // Real-time user location tracking
-  void _initUserTracking() async {
+  Future<void> _initUserTracking() async {
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied ||
         permission == LocationPermission.deniedForever) {
       permission = await Geolocator.requestPermission();
     }
 
-    final currentPosition = await Geolocator.getCurrentPosition();
-    position.value = currentPosition;
+    final currentPosition = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+
+    position.value = LatLng(currentPosition.latitude, currentPosition.longitude);
 
     cameraPosition.value = CameraPosition(
-      target: LatLng(currentPosition.latitude, currentPosition.longitude),
+      target: position.value!,
       zoom: 16,
     );
 
@@ -62,10 +65,10 @@ class GooglepageviewController extends GetxController {
         distanceFilter: 10,
       ),
     ).listen((newPosition) {
-      position.value = newPosition;
+      position.value = LatLng(newPosition.latitude, newPosition.longitude);
 
       if (mapController != null) {
-        mapController.animateCamera(
+        mapController!.animateCamera(
           CameraUpdate.newLatLng(
             LatLng(newPosition.latitude, newPosition.longitude),
           ),
@@ -88,7 +91,10 @@ class GooglepageviewController extends GetxController {
       final current = deliveryPosition.value;
       if (current == null) return;
 
-      final newPos = LatLng(current.latitude - 0.0001, current.longitude - 0.0001);
+      final newPos = LatLng(
+        current.latitude - 0.0001,
+        current.longitude - 0.0001,
+      );
       deliveryPosition.value = newPos;
 
       deliveryMarker.value = Marker(

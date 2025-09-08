@@ -104,7 +104,7 @@ class OrderhistorypageView extends GetView<OrderhistorypageController> {
                             ),
                           ),
                           SizedBox(
-                            height: width * 0.03,
+                            height: width * 0.07,
                           ), // spacing between image and text
                           Text(
                             "No orders\nLooks like you haven't placed any orders yet",
@@ -112,7 +112,7 @@ class OrderhistorypageView extends GetView<OrderhistorypageController> {
                             style: GoogleFonts.poppins(
                               fontSize:
                                   MediaQuery.of(context).size.width *
-                                  0.035, // responsive font
+                                  0.030, // responsive font
                               color:
                                   Theme.of(context).brightness ==
                                       Brightness.dark

@@ -27,7 +27,7 @@ class PhonescreenpageView extends GetView<PhonescreenpageController> {
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage("assets/images/phonebg.jpg"),
+                image: AssetImage("assets/images/phonescreenpng.jpg"),
                 fit: BoxFit.cover,
                 colorFilter: ColorFilter.mode(
                   Colors.black.withOpacity(0.4),

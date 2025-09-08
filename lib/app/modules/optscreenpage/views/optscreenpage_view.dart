@@ -28,7 +28,7 @@ class OptscreenpageView extends GetView<OptscreenpageController> {
                 BlendMode.darken,
               ),
               child: Image.asset(
-                'assets/images/optvega.jpg',
+                'assets/images/optscreennnnnn.jpg',
                 fit: BoxFit.cover,
               ),
             ),

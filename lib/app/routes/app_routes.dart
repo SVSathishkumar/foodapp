@@ -31,6 +31,8 @@ abstract class Routes {
   static const TRACKINGPAGE = _Paths.TRACKINGPAGE;
   static const ORDERHISTORYPAGE = _Paths.ORDERHISTORYPAGE;
   static const CALENDEREVENTPAGE = _Paths.CALENDEREVENTPAGE;
+  static const BISLERIWATERPAGE = _Paths.BISLERIWATERPAGE;
+  static const CATEGORYPAGE = _Paths.CATEGORYPAGE;
 }
 
 abstract class _Paths {
@@ -64,4 +66,6 @@ abstract class _Paths {
   static const TRACKINGPAGE = '/trackingpage';
   static const ORDERHISTORYPAGE = '/orderhistorypage';
   static const CALENDEREVENTPAGE = '/calendereventpage';
+  static const BISLERIWATERPAGE = '/bisleriwaterpage';
+  static const CATEGORYPAGE = '/categorypage';
 }

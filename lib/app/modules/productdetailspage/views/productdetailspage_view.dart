@@ -264,76 +264,52 @@ class _FoodDetailsViewState extends State<ProductDetailsViewpageView> {
                     ),
                   ),
                   SizedBox(height: height * 0.04),
-
                   Padding(
                     padding: EdgeInsets.symmetric(
                       horizontal: MediaQuery.of(context).size.width * 0.02,
                     ),
-                    child: ActionSlider.standard(
-                      backgroundColor: isDark
-                          ? Colors.orange.shade300
-                          : Colors.pinkAccent,
-                      toggleColor: Colors.white,
-                      icon: Icon(
-                        Icons.shopping_bag,
-                        size:
-                            MediaQuery.of(context).size.width *
-                            0.06, // responsive icon
-                        color: isDark
-                            ? Colors.orange.shade300
-                            : Colors.pinkAccent,
-                      ),
-                      successIcon: CircleAvatar(
-                        radius:
-                            MediaQuery.of(context).size.width *
-                            0.045, // responsive radius
-                        backgroundColor: isDark ? Colors.white : Colors.black,
-                        child: Icon(
-                          Icons.check,
-                          color: isDark ? Colors.black : Colors.white,
-                          size:
-                              MediaQuery.of(context).size.width *
-                              0.045, // responsive icon
-                        ),
-                      ),
-                      child: Text(
-                        'Add To Cart',
-                        style: GoogleFonts.poppins(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize:
-                              MediaQuery.of(context).textScaleFactor *
-                              MediaQuery.of(context).size.width *
-                              0.04, // responsive font
-                        ),
-                      ),
+                    child: SizedBox(
+                      width: double.infinity,
                       height:
                           MediaQuery.of(context).size.height *
                           0.065, // responsive height
-                      sliderBehavior: SliderBehavior.stretch,
-                      action: (controller) async {
-                        controller.loading();
-                        await Future.delayed(
-                          const Duration(milliseconds: 1000),
-                        );
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: isDark
+                              ? Colors.orange.shade300
+                              : Colors.pinkAccent,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
+                        onPressed: () async {
+                          cartController.addItem({
+                            'image': images[currentPage],
+                            'title': title,
+                            'unitPrice': price,
+                            'quantity': quantity.toString(),
+                            'totalPrice': "₹$totalPrice",
+                          });
 
-                        cartController.addItem({
-                          'image': images[currentPage],
-                          'title': title,
-                          'unitPrice': price,
-                          'quantity': quantity.toString(),
-                          'totalPrice': "₹$totalPrice",
-                        });
+                          onAddToCartPopup(); // ✅ One-time popup
 
-                        controller.success();
-
-                        onAddToCartPopup(); // ✅ One-time popup
-
-                        await Future.delayed(const Duration(milliseconds: 800));
-
-                        controller.reset();
-                        Get.to(() => BottomnavigationbarView());
-                      },
+                          await Future.delayed(
+                            const Duration(milliseconds: 800),
+                          );
+                          Get.to(() => BottomnavigationbarView());
+                        },
+                        child: Text(
+                          "Add To Cart",
+                          style: GoogleFonts.poppins(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize:
+                                MediaQuery.of(context).textScaleFactor *
+                                MediaQuery.of(context).size.width *
+                                0.04, // responsive font
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ],

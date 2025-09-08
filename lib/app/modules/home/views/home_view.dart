@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:foodapp/app/modules/addcartpageviews/views/addcartpageviews_view.dart';
 import 'package:foodapp/app/modules/barsstickspage/views/barsstickspage_view.dart';
+import 'package:foodapp/app/modules/bisleriwaterpage/views/bisleriwaterpage_view.dart';
 import 'package:foodapp/app/modules/burgerscreenpage/views/burgerscreenpage_view.dart';
+import 'package:foodapp/app/modules/categorypage/views/categorypage_view.dart';
 import 'package:foodapp/app/modules/conespagescreen/views/conespagescreen_view.dart';
 import 'package:foodapp/app/modules/drawerpage/views/drawerpage_view.dart';
 import 'package:foodapp/app/modules/familypackspage/views/familypackspage_view.dart';
@@ -25,8 +28,16 @@ class HomeView extends GetView<HomeController> {
   final themeController = Get.find<ThemeController>();
 
   final List<Map<String, dynamic>> categories = [
-    {'icon': Icons.apple, 'label': 'Fruits', 'iconColor': Colors.brown},
-    {'icon': Icons.grass, 'label': 'Vegetables', 'iconColor': Colors.green},
+    {
+      'icon': FontAwesomeIcons.appleWhole,
+      'label': 'Fruits',
+      'iconColor': Colors.red,
+    },
+    {
+      'icon': FontAwesomeIcons.carrot,
+      'label': 'Vegetables',
+      'iconColor': Colors.orange,
+    },
     {
       'icon': Icons.icecream,
       'label': 'ice Cream',
@@ -44,8 +55,13 @@ class HomeView extends GetView<HomeController> {
     },
     {
       'icon': Icons.family_restroom,
-      'label': 'FamilyPacks',
+      'label': 'FamilyPack',
       'iconColor': Colors.teal,
+    },
+    {
+      'icon': FontAwesomeIcons.bottleWater,
+      'label': 'bisleriwater',
+      'iconColor': Colors.blueAccent,
     },
   ];
 
@@ -62,10 +78,8 @@ class HomeView extends GetView<HomeController> {
     final height = size.height;
     final textScale = MediaQuery.of(context).textScaleFactor;
 
-    // ✅ Breakpoints for responsiveness
+    // ✅ Only Mobile Responsive
     final isMobile = width < 600;
-    final isTablet = width >= 600 && width < 900;
-    final isWeb = width >=600;
 
     return Scaffold(
       drawer: DrawerView(),
@@ -96,15 +110,16 @@ class HomeView extends GetView<HomeController> {
                 Text(
                   'Hello',
                   style: GoogleFonts.poppins(
-                    fontSize: (isWeb ? 18 : width * 0.035) * textScale,
+                    fontSize: width * 0.03 * textScale,
                     fontWeight: FontWeight.bold,
                     color: Theme.of(context).textTheme.bodyLarge?.color,
                   ),
                 ),
                 Text(
                   'Food Shop',
+                  overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.poppins(
-                    fontSize: (isWeb ? 16 : width * 0.032) * textScale,
+                    fontSize: width * 0.027 * textScale,
                     color: Colors.grey,
                   ),
                 ),
@@ -121,7 +136,7 @@ class HomeView extends GetView<HomeController> {
                   size: width * 0.07,
                   color: Theme.of(context).iconTheme.color,
                 ),
-                onPressed: () => Get.to(() => const AddcartpageviewsView()),
+                onPressed: () => Get.to(() =>  AddcartpageviewsView()),
               ),
               Positioned(
                 right: width * 0.015,
@@ -146,7 +161,7 @@ class HomeView extends GetView<HomeController> {
               size: width * 0.07,
               color: Theme.of(context).iconTheme.color,
             ),
-            onPressed: () => Get.to(() => const NotificationspageView()),
+            onPressed: () => Get.to(() => NotificationspageView()),
           ),
           IconButton(
             icon: Obx(
@@ -245,7 +260,7 @@ class HomeView extends GetView<HomeController> {
     final textScale = MediaQuery.of(context).textScaleFactor;
 
     return SizedBox(
-      height: height * 0.11,
+      height: height * 0.10, // slightly increased for safe space
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         itemCount: categories.length,
@@ -253,7 +268,7 @@ class HomeView extends GetView<HomeController> {
         itemBuilder: (context, index) {
           final item = categories[index];
           return SizedBox(
-            width: width * 0.19,
+            width: width * 0.16, // little more width for label wrapping
             child: Material(
               color: Colors.transparent,
               child: InkWell(
@@ -262,23 +277,30 @@ class HomeView extends GetView<HomeController> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CircleAvatar(
-                      radius: width * 0.075,
-                      backgroundColor: Theme.of(context).cardColor,
-                      child: Icon(
-                        item['icon'],
-                        color: item['iconColor'],
-                        size: width * 0.07,
+                    Flexible(
+                      // prevents overflow
+                      child: CircleAvatar(
+                        radius: width * 0.07,
+                        backgroundColor: Theme.of(context).cardColor,
+                        child: Icon(
+                          item['icon'],
+                          color: item['iconColor'],
+                          size: width * 0.06,
+                        ),
                       ),
                     ),
-                    SizedBox(height: height * 0.007),
-                    Text(
-                      item['label'],
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.poppins(
-                        fontSize: width * 0.029 * textScale,
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).textTheme.bodyLarge?.color,
+                    SizedBox(height: height * 0.006),
+                    Flexible(
+                      child: Text(
+                        item['label'],
+                        textAlign: TextAlign.center,
+                        maxLines: 1, // avoids wrap overflow
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.poppins(
+                          fontSize: width * 0.024 * textScale,
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).textTheme.bodyLarge?.color,
+                        ),
                       ),
                     ),
                   ],
@@ -308,8 +330,11 @@ class HomeView extends GetView<HomeController> {
       case 'BarsSticks':
         Get.to(() => BarsstickspageView());
         break;
-      case 'FamilyPacks':
+      case 'FamilyPack':
         Get.to(() => FamilypackspageView());
+        break;
+      case 'bisleriwater':
+        Get.to(() => bisleriWaterPageView());
         break;
       default:
         Get.snackbar(
@@ -335,33 +360,33 @@ class HomeView extends GetView<HomeController> {
             color: isDarkMode ? Colors.white70 : Colors.grey,
           ),
         ),
-        Text(
-          "See All",
-          style: GoogleFonts.poppins(
-            fontSize: width * 0.035,
-            fontWeight: FontWeight.bold,
-            color: isDarkMode ? Colors.lightBlueAccent : Colors.blue,
+        GestureDetector(
+          onTap: () {
+            Get.to(CategorypageView());
+          },
+          child: Text(
+            "See All",
+            style: GoogleFonts.poppins(
+              fontSize: width * 0.035,
+              fontWeight: FontWeight.bold,
+              color: isDarkMode ? Colors.lightBlueAccent : Colors.blue,
+            ),
           ),
         ),
       ],
     );
   }
 
-  // ✅ Responsive Grid
+  // ✅ Responsive Grid (Mobile only → 2 columns)
   Widget _nonScrollableProductGrid(
     List<Map<String, String>> items,
     BuildContext context,
   ) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final crossAxisCount = screenWidth < 600
-        ? 2
-        : screenWidth < 900
-        ? 3
-        : 4;
 
     return AnimationLimiter(
       child: MasonryGridView.count(
-        crossAxisCount: crossAxisCount,
+        crossAxisCount: 2, // ✅ Always 2 columns for mobile
         mainAxisSpacing: screenWidth * 0.035,
         crossAxisSpacing: screenWidth * 0.035,
         shrinkWrap: true,
@@ -372,7 +397,7 @@ class HomeView extends GetView<HomeController> {
           return AnimationConfiguration.staggeredGrid(
             position: index,
             duration: const Duration(milliseconds: 500),
-            columnCount: crossAxisCount,
+            columnCount: 2,
             child: ScaleAnimation(
               child: FadeInAnimation(child: _productCard(item, context)),
             ),
@@ -399,7 +424,7 @@ class HomeView extends GetView<HomeController> {
         },
       ),
       child: Container(
-        width: screenWidth < 600 ? screenWidth * 0.45 : screenWidth * 0.3,
+        width: screenWidth * 0.45,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(screenWidth * 0.04),
           color: Theme.of(context).cardColor,
@@ -489,7 +514,7 @@ class HomeView extends GetView<HomeController> {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: GoogleFonts.poppins(
-                      fontSize: screenWidth * 0.035 * textScale,
+                      fontSize: screenWidth * 0.032 * textScale,
                       fontWeight: FontWeight.bold,
                       color: Theme.of(context).textTheme.bodyLarge?.color,
                     ),
@@ -501,7 +526,7 @@ class HomeView extends GetView<HomeController> {
                         item['price']!,
                         style: GoogleFonts.poppins(
                           fontWeight: FontWeight.bold,
-                          fontSize: screenWidth * 0.038 * textScale,
+                          fontSize: screenWidth * 0.034 * textScale,
                           color: Theme.of(context).textTheme.bodyLarge?.color,
                         ),
                       ),
@@ -509,7 +534,7 @@ class HomeView extends GetView<HomeController> {
                       Text(
                         item['oldPrice']!,
                         style: GoogleFonts.poppins(
-                          fontSize: screenWidth * 0.032 * textScale,
+                          fontSize: screenWidth * 0.030 * textScale,
                           color: Colors.red,
                           decoration: TextDecoration.lineThrough,
                         ),

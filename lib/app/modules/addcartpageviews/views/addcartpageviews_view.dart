@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:action_slider/action_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:foodapp/app/modules/orderconfrompageview/views/orderconfrompageview_view.dart';
@@ -15,9 +16,8 @@ class AddcartpageviewsView extends StatelessWidget {
 
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-    final textScale = MediaQuery.of(context).textScaleFactor;
     final isTablet = width > 600;
-    final isWeb = width >600;
+    final isWeb = width > 600;
 
     return SafeArea(
       child: Scaffold(
@@ -65,10 +65,18 @@ class AddcartpageviewsView extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: width * 0.05),
               child: Obx(() {
                 return Container(
-                  padding: EdgeInsets.all(isWeb ? 28 : isTablet ? 24 : 20),
+                  padding: EdgeInsets.all(
+                    isWeb
+                        ? 28
+                        : isTablet
+                            ? 24
+                            : 20,
+                  ),
                   decoration: BoxDecoration(
                     color: isDark ? Colors.grey[900] : Colors.grey.shade100,
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(
+                      MediaQuery.of(context).size.width * 0.05,
+                    ),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withOpacity(0.1),
@@ -107,8 +115,9 @@ class AddcartpageviewsView extends StatelessWidget {
 
                       /// CHECKOUT SLIDER
                       Padding(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: width * 0.02),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: MediaQuery.of(context).size.width * 0.02,
+                        ),
                         child: ActionSlider.standard(
                           backgroundColor: isDark
                               ? Colors.orange.shade300
@@ -119,28 +128,16 @@ class AddcartpageviewsView extends StatelessWidget {
                             color: isDark
                                 ? Colors.orange.shade300
                                 : Colors.pinkAccent,
-                            size: isWeb
-                                ? width * 0.04
-                                : isTablet
-                                    ? width * 0.055
-                                    : width * 0.06,
+                            size: MediaQuery.of(context).size.width * 0.06,
                           ),
                           successIcon: CircleAvatar(
-                            radius: isWeb
-                                ? width * 0.025
-                                : isTablet
-                                    ? width * 0.03
-                                    : width * 0.035,
+                            radius: MediaQuery.of(context).size.width * 0.035,
                             backgroundColor:
                                 isDark ? Colors.white : Colors.black,
                             child: Icon(
                               Icons.check,
                               color: isDark ? Colors.black : Colors.white,
-                              size: isWeb
-                                  ? width * 0.035
-                                  : isTablet
-                                      ? width * 0.04
-                                      : width * 0.045,
+                              size: MediaQuery.of(context).size.width * 0.045,
                             ),
                           ),
                           child: Text(
@@ -148,25 +145,20 @@ class AddcartpageviewsView extends StatelessWidget {
                             style: GoogleFonts.poppins(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
-                              fontSize: isWeb
-                                  ? textScale * 18
-                                  : isTablet
-                                      ? textScale * 16
-                                      : textScale * 14,
+                              fontSize: 14,
                             ),
                           ),
-                          height: isWeb
-                              ? height * 0.07
-                              : isTablet
-                                  ? height * 0.068
-                                  : height * 0.065,
+                          height: math.max(
+                              MediaQuery.of(context).size.height * 0.065, 50),
                           action: (sliderController) async {
                             sliderController.loading();
                             await Future.delayed(
-                                const Duration(milliseconds: 800));
+                              const Duration(milliseconds: 800),
+                            );
                             sliderController.success();
                             await Future.delayed(
-                                const Duration(milliseconds: 2000));
+                              const Duration(milliseconds: 2000),
+                            );
                             sliderController.reset();
 
                             Get.to(
@@ -453,10 +445,15 @@ class AddcartpageviewsView extends StatelessWidget {
                       ? width * 0.025
                       : width * 0.030,
               fontWeight: FontWeight.bold,
-              color: isDark ? Colors.white70 : const Color.fromARGB(221, 59, 58, 58),
+              color: isDark
+                  ? Colors.white70
+                  : const Color.fromARGB(221, 59, 58, 58),
             ),
           ),
-          actionsPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+          actionsPadding: const EdgeInsets.symmetric(
+            horizontal: 10,
+            vertical: 8,
+          ),
           actions: [
             ElevatedButton(
               style: ElevatedButton.styleFrom(

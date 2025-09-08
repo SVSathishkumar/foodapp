@@ -5,7 +5,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:map_launcher/map_launcher.dart' as map_launcher;
-
 import '../controllers/googlepageview_controller.dart';
 
 class GooglepageviewView extends GetView<GooglepageviewController> {
@@ -14,7 +13,10 @@ class GooglepageviewView extends GetView<GooglepageviewController> {
   GoogleMapController? _mapController;
 
   Future<void> openMapDirections(
-      double destinationLat, double destinationLng, String title) async {
+    double destinationLat,
+    double destinationLng,
+    String title,
+  ) async {
     final availableMaps = await map_launcher.MapLauncher.installedMaps;
 
     if (availableMaps.isNotEmpty) {
@@ -33,11 +35,6 @@ class GooglepageviewView extends GetView<GooglepageviewController> {
     final width = mq.size.width;
     final height = mq.size.height;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    // Responsive values
-    final double iconSize = width * 0.055;
-    final double fontTitle = width * 0.035;
-    final double fontSub = width * 0.032;
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -75,13 +72,15 @@ class GooglepageviewView extends GetView<GooglepageviewController> {
               zoomControlsEnabled: false,
             ),
 
-            /// 🔹 Search box
+            // Search box
             SafeArea(
               child: Padding(
                 padding: EdgeInsets.all(width * 0.03),
                 child: Container(
                   padding: EdgeInsets.symmetric(
-                      horizontal: width * 0.04, vertical: height * 0.008),
+                    horizontal: width * 0.04,
+                    vertical: height * 0.008,
+                  ),
                   decoration: BoxDecoration(
                     color: Theme.of(context).cardColor,
                     borderRadius: BorderRadius.circular(width * 0.03),
@@ -97,7 +96,7 @@ class GooglepageviewView extends GetView<GooglepageviewController> {
                     children: [
                       Icon(
                         Icons.search,
-                        size: iconSize,
+                        size: width * 0.052,
                         color: isDark ? Colors.white70 : Colors.black54,
                       ),
                       SizedBox(width: width * 0.02),
@@ -105,22 +104,25 @@ class GooglepageviewView extends GetView<GooglepageviewController> {
                         child: TextField(
                           style: GoogleFonts.poppins(
                             color: isDark ? Colors.white : Colors.black,
-                            fontSize: fontTitle,
+                            fontSize: width * 0.04,
                           ),
                           decoration: InputDecoration(
                             hintText: 'Search nearby places...',
                             hintStyle: GoogleFonts.poppins(
                               color: isDark ? Colors.white54 : Colors.black45,
-                              fontSize: fontSub,
+                              fontSize: width * 0.032,
                             ),
                             border: InputBorder.none,
                           ),
                         ),
                       ),
                       CircleAvatar(
+                        backgroundColor: isDark
+                            ? const Color.fromARGB(255, 32, 32, 32)
+                            : const Color.fromARGB(255, 255, 255, 255),
                         radius: width * 0.045,
-                        backgroundImage: const AssetImage(
-                          "assets/images/maplocationlogo.png",
+                        backgroundImage: AssetImage(
+                          "assets/images/googlemapicons.png",
                         ),
                       ),
                     ],
@@ -129,7 +131,7 @@ class GooglepageviewView extends GetView<GooglepageviewController> {
               ),
             ),
 
-            /// 🔹 Bottom Places List
+            // Bottom Places List
             DraggableScrollableSheet(
               initialChildSize: 0.35,
               minChildSize: 0.2,
@@ -189,40 +191,15 @@ class GooglepageviewView extends GetView<GooglepageviewController> {
         'phone': '+919888777666',
         'location': const LatLng(10.763500, 78.815000),
       },
-      {
-        'name': 'Thalappakatti Dindigul',
-        'rating': 4.6,
-        'distance': '1.4 km',
-        'Time': 'Mrg:11.30 To Nig:10.30',
-        'image': 'assets/images/food3.avif',
-        'phone': '+919877665544',
-        'location': const LatLng(10.760000, 78.810000),
-      },
-      {
-        'name': 'Nagai Fish Fry Kadai',
-        'rating': 4.5,
-        'distance': '1.1 km',
-        'Time': 'Mrg:12.00 To Nig:9.30',
-        'image': 'assets/images/food4.avif',
-        'phone': '+919766554433',
-        'location': const LatLng(10.765000, 78.820000),
-      },
-      {
-        'name': 'A2B - Adyar Ananda Bhavan',
-        'rating': 4.4,
-        'distance': '0.9 km',
-        'Time': 'Mrg:6.00 To Nig:10.00',
-        'image': 'assets/images/food5.jpg',
-        'phone': '+919899887766',
-        'location': const LatLng(10.764000, 78.817000),
-      },
     ];
 
     return Container(
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.vertical(top: Radius.circular(width * 0.06)),
-        boxShadow: [BoxShadow(color: Colors.black26, blurRadius: width * 0.025)],
+        boxShadow: [
+          BoxShadow(color: Colors.black26, blurRadius: width * 0.025),
+        ],
       ),
       child: Column(
         children: [
@@ -251,8 +228,8 @@ class GooglepageviewView extends GetView<GooglepageviewController> {
                     borderRadius: BorderRadius.circular(width * 0.025),
                     child: Image.asset(
                       place['image'],
-                      width: width * 0.18,
-                      height: width * 0.18,
+                      width: width * 0.16,
+                      height: width * 0.16,
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -260,7 +237,7 @@ class GooglepageviewView extends GetView<GooglepageviewController> {
                     place['name'],
                     style: GoogleFonts.poppins(
                       color: isDark ? Colors.white : Colors.black,
-                      fontSize: width * 0.034,
+                      fontSize: width * 0.026,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -271,7 +248,7 @@ class GooglepageviewView extends GetView<GooglepageviewController> {
                           ? Colors.grey[400]
                           : const Color.fromARGB(255, 115, 115, 115),
                       fontWeight: FontWeight.w600,
-                      fontSize: width * 0.03,
+                      fontSize: width * 0.029,
                     ),
                   ),
                   trailing: Row(
@@ -280,7 +257,7 @@ class GooglepageviewView extends GetView<GooglepageviewController> {
                       IconButton(
                         icon: Icon(
                           Icons.phone,
-                          size: width * 0.055,
+                          size: width * 0.052,
                           color: isDark ? Colors.amber : Colors.pink,
                         ),
                         onPressed: () async {
@@ -295,7 +272,7 @@ class GooglepageviewView extends GetView<GooglepageviewController> {
                               SnackBar(
                                 content: Text(
                                   'Could not launch dialer',
-                                  style: TextStyle(
+                                  style: GoogleFonts.poppins(
                                     color: isDark ? Colors.white : Colors.black,
                                     fontSize: width * 0.035,
                                   ),
@@ -311,7 +288,7 @@ class GooglepageviewView extends GetView<GooglepageviewController> {
                       IconButton(
                         icon: Icon(
                           Icons.directions,
-                          size: width * 0.06,
+                          size: width * 0.05,
                           color: isDark ? Colors.pink : Colors.amber,
                         ),
                         onPressed: () async {

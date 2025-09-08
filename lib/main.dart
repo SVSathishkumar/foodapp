@@ -15,7 +15,6 @@ import 'app/routes/app_pages.dart';
 import 'app/modules/home/controllers/home_controller.dart';
 
 void main() async {
-  
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   // Register all controllers with GetX
@@ -46,7 +45,7 @@ class MyApp extends StatelessWidget {
         theme: AppTheme.lightTheme,
         darkTheme: AppTheme.darkTheme,
         themeMode: themeController.theme,
-        initialRoute: AppPages.INITIAL, 
+        initialRoute: AppPages.INITIAL,
         getPages: AppPages.routes,
       ),
     );

@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-
 import '../modules/Calendereventpage/bindings/calendereventpage_binding.dart';
 import '../modules/Calendereventpage/views/calendereventpage_view.dart';
 import '../modules/aboutscreenpage/bindings/aboutscreenpage_binding.dart';
@@ -8,12 +7,14 @@ import '../modules/addcartpageviews/bindings/addcartpageviews_binding.dart';
 import '../modules/addcartpageviews/views/addcartpageviews_view.dart';
 import '../modules/barsstickspage/bindings/barsstickspage_binding.dart';
 import '../modules/barsstickspage/views/barsstickspage_view.dart';
+import '../modules/bisleriwaterpage/bindings/bisleriwaterpage_binding.dart';
+import '../modules/bisleriwaterpage/views/bisleriwaterpage_view.dart';
 import '../modules/bottomnavgationbar/bindings/bottomnavgationbar_binding.dart';
 import '../modules/bottomnavgationbar/views/bottomnavgationbar_view.dart';
 import '../modules/burgerscreenpage/bindings/burgerscreenpage_binding.dart';
 import '../modules/burgerscreenpage/views/burgerscreenpage_view.dart';
-import '../modules/categorypageview/bindings/categorypageview_binding.dart';
-import '../modules/categorypageview/views/categorypageview_view.dart';
+import '../modules/categorypage/bindings/categorypage_binding.dart';
+import '../modules/categorypage/views/categorypage_view.dart';
 import '../modules/chatbotpage/bindings/chatbotpage_binding.dart';
 import '../modules/chatbotpage/views/chatbotpage_view.dart';
 import '../modules/conespagescreen/bindings/conespagescreen_binding.dart';
@@ -72,11 +73,7 @@ class AppPages {
       page: () => BottomnavigationbarView(),
       binding: BottomnavgationbarBinding(),
     ),
-    GetPage(
-      name: _Paths.CATEGORYPAGEVIEW,
-      page: () => CategorypageviewView(),
-      binding: CategorypageviewBinding(),
-    ),
+  
     GetPage(
       name: _Paths.ADDCARTPAGEVIEWS,
       page: () => AddcartpageviewsView(),
@@ -184,8 +181,18 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.CALENDEREVENTPAGE,
-      page: () =>CalendereventpageView(),
+      page: () => CalendereventpageView(),
       binding: CalendereventpageBinding(),
+    ),
+    GetPage(
+      name: _Paths.BISLERIWATERPAGE,
+      page: () => bisleriWaterPageView(),
+      binding: BisleriwaterpageBinding(),
+    ),
+    GetPage(
+      name: _Paths.CATEGORYPAGE,
+      page: () => const CategorypageView(),
+      binding: CategorypageBinding(),
     ),
   ];
 }

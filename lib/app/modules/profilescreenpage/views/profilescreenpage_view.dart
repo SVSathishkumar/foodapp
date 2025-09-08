@@ -492,7 +492,7 @@ class ProfilescreenpageView extends GetView<ProfilescreenpageController> {
             _buildMenuTile(
               icon: Icons.notifications,
               title: "Notifications",
-              onTap: () => Get.to(const NotificationspageView()),
+              onTap: () => Get.to( NotificationspageView()),
               context: context,
             ),
             SizedBox(height: screenHeight * 0.04),

@@ -1,10 +1,9 @@
 import 'package:get/get.dart';
 
-class CategorypageviewController extends GetxController {
-  //TODO: Implement CategorypageviewController
+class BisleriwaterpageController extends GetxController {
+  //TODO: Implement BisleriwaterpageController
 
   final count = 0.obs;
-
   @override
   void onInit() {
     super.onInit();

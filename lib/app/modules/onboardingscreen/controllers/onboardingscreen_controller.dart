@@ -8,21 +8,21 @@ class OnboardingscreenController extends GetxController {
 
   final List<Map<String, String>> onboardingData = [
     {
-      "image": "assets/images/cooking2.png",
+      "image": "assets/images/onboscreen2.jpg",
       "title": "Get the exact nutrition value of everything you eat",
       "highlight": "exact nutrition",
       "subtitle":
           "We are updating our food database every minute to help you track your calories.",
     },
     {
-      "image": "assets/images/cooking3.png",
+      "image": "assets/images/onboscreen3.jpg",
       "title": "Discover fresh and healthy meal options",
       "highlight": "fresh and healthy",
       "subtitle":
           "Choose from a variety of nutritious dishes to suit your lifestyle.",
     },
     {
-      "image": "assets/images/cookingfinish.png",
+      "image": "assets/images/onboscreen4.jpg",
       "title": "Satisfy your cravings without guilt",
       "highlight": "without guilt",
       "subtitle":

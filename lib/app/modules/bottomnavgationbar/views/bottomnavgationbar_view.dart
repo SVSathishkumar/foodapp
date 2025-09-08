@@ -33,9 +33,9 @@ class _BottomnavigationbarViewState extends State<BottomnavigationbarView> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size; // ✅ Get screen size
-    final isTablet = size.width > 600;
-    final isWeb = size.width >800;
+    final size = MediaQuery.of(context).size;
+    final width = size.width;
+    final textScale = MediaQuery.of(context).textScaleFactor;
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -46,11 +46,11 @@ class _BottomnavigationbarViewState extends State<BottomnavigationbarView> {
                 icon: Icon(
                   Icons.arrow_back,
                   color: Colors.pink,
-                  size: isTablet ? 28 : 22, // ✅ Responsive back button size
+                  size: width * 0.06, // ✅ Responsive back button
                 ),
                 onPressed: () {
                   setState(() {
-                    _selectedIndex = 0; // Go back to Home tab
+                    _selectedIndex = 0;
                   });
                 },
               ),
@@ -59,16 +59,13 @@ class _BottomnavigationbarViewState extends State<BottomnavigationbarView> {
             ? const Color.fromARGB(255, 18, 17, 17)
             : Colors.white,
         elevation: 0,
-
-        // Show location icon + text only if Home tab and not Profile tab
         title: (_selectedIndex == 0)
             ? Row(
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   IconButton(
                     icon: Icon(
                       Icons.location_on,
-                      size: isTablet ? 26 : 19, // ✅ Responsive icon size
+                      size: width * 0.050, // ✅ Responsive icon size
                       color: Colors.blue,
                     ),
                     onPressed: () {
@@ -77,15 +74,12 @@ class _BottomnavigationbarViewState extends State<BottomnavigationbarView> {
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints(),
                   ),
+                   SizedBox(width:1,),
                   Expanded(
                     child: Text(
                       "623707 Select delivery location",
                       style: GoogleFonts.poppins(
-                        fontSize: isWeb
-                            ? 16
-                            : isTablet
-                                ? 14
-                                : 11, // ✅ Responsive font
+                        fontSize: width * 0.032 * textScale, // ✅ Responsive text
                         fontWeight: FontWeight.bold,
                         color: const Color.fromARGB(255, 201, 202, 202),
                       ),
@@ -116,22 +110,14 @@ class _BottomnavigationbarViewState extends State<BottomnavigationbarView> {
             ? const Color.fromARGB(255, 233, 231, 231)
             : const Color.fromARGB(255, 160, 160, 160),
         selectedItemFontStyle: GoogleFonts.raleway(
-          fontSize: isWeb
-              ? 15
-              : isTablet
-                  ? 13
-                  : 12, // ✅ Responsive font size
+          fontSize: width * 0.035 * textScale, // ✅ Responsive font
           color: Theme.of(context).brightness == Brightness.dark
               ? Colors.amber.shade200
               : Colors.pink,
           fontWeight: FontWeight.bold,
         ),
         unselectedItemFontStyle: TextStyle(
-          fontSize: isWeb
-              ? 14
-              : isTablet
-                  ? 12
-                  : 11, // ✅ Responsive font size
+          fontSize: width * 0.032 * textScale,
         ),
       ),
     );
@@ -164,17 +150,12 @@ class CurvedBottomNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size; // ✅ Responsive bottom nav
-    final isTablet = size.width > 600;
-    final isWeb = size.width > 1000;
+    final width = MediaQuery.of(context).size.width;
+    final textScale = MediaQuery.of(context).textScaleFactor;
 
     return Container(
       padding: EdgeInsets.symmetric(
-        vertical: isWeb
-            ? 20
-            : isTablet
-                ? 16
-                : 12, // ✅ Responsive padding
+        vertical: width * 0.03, // ✅ Responsive padding
       ),
       decoration: BoxDecoration(
         color: backgroundColor,
@@ -201,19 +182,17 @@ class CurvedBottomNavigationBar extends StatelessWidget {
               children: [
                 Icon(
                   icons[index],
-                  size: isWeb
-                      ? 32
-                      : isTablet
-                          ? 28
-                          : 22, // ✅ Responsive icon size
+                  size: width * 0.07, // ✅ Responsive icon size
                   color: isSelected ? selectedIconColor : unselectedIconColor,
                 ),
                 const SizedBox(height: 4),
                 Text(
                   labels[index],
                   style: isSelected
-                      ? selectedItemFontStyle
-                      : unselectedItemFontStyle,
+                      ? selectedItemFontStyle.copyWith(
+                          fontSize: width * 0.035 * textScale)
+                      : unselectedItemFontStyle.copyWith(
+                          fontSize: width * 0.032 * textScale),
                 ),
               ],
             ),

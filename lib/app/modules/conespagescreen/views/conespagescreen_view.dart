@@ -138,7 +138,7 @@ class ConespagescreenView extends StatelessWidget {
           ),
           IconButton(
             icon: Icon(Icons.notifications_none, color: textColor),
-            onPressed: () => Get.to(() => const NotificationspageView()),
+            onPressed: () => Get.to(() =>  NotificationspageView()),
           ),
           IconButton(
             icon: Icon(Icons.favorite_border_outlined, color: textColor),
