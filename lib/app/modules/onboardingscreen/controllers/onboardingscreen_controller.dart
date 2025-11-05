@@ -1,4 +1,4 @@
-import 'package:foodapp/app/modules/phonescreenpage/views/phonescreenpage_view.dart';
+import 'package:foodapp/app/modules/loginpage/views/loginpage_view.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
@@ -36,10 +36,10 @@ class OnboardingscreenController extends GetxController {
 
   void nextPage() {
     if (currentPage.value == onboardingData.length - 1) {
-      Get.to(PhonescreenpageView());
+      Get.to(LoginpageView());
     } else {
       pageController.nextPage(
-        duration: const Duration(milliseconds: 400),
+        duration:  Duration(milliseconds: 400),
         curve: Curves.easeInOut,
       );
     }

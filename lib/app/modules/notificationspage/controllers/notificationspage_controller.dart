@@ -6,28 +6,5 @@ class NotificationspageController extends GetxController {
   var orderNotifications = false.obs;
   var generalNotifications = true.obs;
   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   
 }

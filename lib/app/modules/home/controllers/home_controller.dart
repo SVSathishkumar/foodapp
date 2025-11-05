@@ -1,34 +1,31 @@
+import 'package:foodapp/app/data/services/api_home.dart';
 import 'package:get/get.dart';
 
 class HomeController extends GetxController {
+  var allItems = <Map<String, String>>[].obs;
   var searchQuery = ''.obs;
 
-  final List<Map<String, String>> allItems = [
-    {
-      'image': 'assets/images/Fresh Organic Carrot.png',
-      'title': 'Fresh Organic Carrot',
-      'price': '₹34',
-      'oldPrice': '₹49.95',
-    },
-    {
-      'image': 'assets/images/Green Capsicum.png',
-      'title': 'Green Capsicum',
-      'price': '₹44',
-      'oldPrice': '₹59.95',
-    },
-    {
-      'image': 'assets/images/Tomato (500g).png',
-      'title': 'Tomato (500g)',
-      'price': '₹24',
-      'oldPrice': '₹34.95',
-    },
-    {
-      'image': 'assets/images/Potato (1kg).png',
-      'title': 'Potato (1kg)',
-      'price': '₹39',
-      'oldPrice': '₹54.95',
-    },
-  ];
+  @override
+  void onInit() {
+    super.onInit();
+    fetchProducts();
+  }
+
+  Future<void> fetchProducts() async {
+    try {
+      final data = await ApiHome.fetchItems();
+      allItems.value = data.map<Map<String, String>>((item) {
+        return {
+          'title': item['name']?.toString() ?? '',
+          'price': '₹${item['price']?.toString() ?? '0'}',
+          'oldPrice': '₹${((item['price'] ?? 0) + 20).toString()}',
+          'image': item['image_url']?.toString() ?? '',
+        };
+      }).toList();
+    } catch (e) {
+      print('Fetch error: $e');
+    }
+  }
 
   List<Map<String, String>> get filteredItems {
     if (searchQuery.value.isEmpty) return allItems;

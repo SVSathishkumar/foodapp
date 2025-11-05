@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:foodapp/app/data/services/api_logout.dart';
 import 'package:foodapp/app/modules/phonescreenpage/views/phonescreenpage_view.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
-import 'package:foodapp/app/modules/bottomnavgationbar/views/bottomnavgationbar_view.dart';
 
-/// 🔹 Reusable Logout Popup
-void showLogoutPopup({required bool isDark}) {
+void showLogoutPopup({required bool isDark, required String token}) {
   final context = Get.context!;
   final size = MediaQuery.of(context).size;
 
@@ -16,8 +15,8 @@ void showLogoutPopup({required bool isDark}) {
         borderRadius: BorderRadius.circular(16),
         side: BorderSide(
           color: isDark
-              ?  Color.fromARGB(255, 236, 202, 100)
-              : Colors.pink, // 👉 card side border color
+              ? const Color.fromARGB(255, 236, 202, 100)
+              : Colors.pink,
           width: 1.5,
         ),
       ),
@@ -27,10 +26,11 @@ void showLogoutPopup({required bool isDark}) {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            /// 👉 Lottie animation
-            Lottie.asset('assets/images/give order.json', height: size.width * 0.5),
-             SizedBox(height: 16),
-
+            Lottie.asset(
+              'assets/images/give order.json',
+              height: size.width * 0.5,
+            ),
+            const SizedBox(height: 16),
             Text(
               "Are you sure you want to logout?",
               textAlign: TextAlign.center,
@@ -41,7 +41,6 @@ void showLogoutPopup({required bool isDark}) {
               ),
             ),
             const SizedBox(height: 24),
-
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -55,9 +54,41 @@ void showLogoutPopup({required bool isDark}) {
                       side: const BorderSide(color: Colors.white),
                     ),
                   ),
-                  onPressed: () {
-                    Get.back(); // close dialog
-                    Get.offAll(() => PhonescreenpageView());
+                  onPressed: () async {
+                    bool success = await ApiLogout.logout(token);
+                    Get.back(); 
+                    if (success) {
+                      Get.offAll(() => PhonescreenpageView());
+                      Get.snackbar(
+                        'Success',
+                        'Logged out successfully',
+                        backgroundColor: Colors.white,
+                        colorText: Colors.black,
+                        icon: Lottie.asset(
+                          'assets/images/Success.json',
+                          width: 40,
+                          height: 40,
+                        ),
+                        snackPosition: SnackPosition.TOP,
+                        borderRadius: 20,
+                        margin: const EdgeInsets.all(16),
+                      );
+                    } else {
+                      Get.snackbar(
+                        'Error',
+                        'Logout failed. Try again.',
+                        backgroundColor: Colors.white,
+                        colorText: Colors.black87,
+                        icon: Lottie.asset(
+                          'assets/images/Failed.json',
+                          width: 40,
+                          height: 40,
+                        ),
+                        snackPosition: SnackPosition.TOP,
+                        borderRadius: 20,
+                        margin: const EdgeInsets.all(16),
+                      );
+                    }
                   },
                   child: Text(
                     "Yes",
@@ -75,13 +106,10 @@ void showLogoutPopup({required bool isDark}) {
                     ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
-                      side: BorderSide(
-                        color: isDark ? Colors.black : Colors.amber,
-                      ),
                     ),
                   ),
                   onPressed: () {
-                    Get.back(); // close dialog only
+                    Get.back();
                   },
                   child: Text(
                     "Cancel",
@@ -99,7 +127,7 @@ void showLogoutPopup({required bool isDark}) {
   );
 }
 
-/// 🔹 Drawer Tile Builder
+/// 🔹 Drawer Tile
 Widget buildDrawerTile(
   IconData icon,
   String title,
@@ -119,7 +147,10 @@ Widget buildDrawerTile(
     ),
     onTap: () {
       if (title == "Logout") {
-        showLogoutPopup(isDark: isDark);
+        showLogoutPopup(
+          isDark: isDark,
+          token: 'cbdccd38a0e526b29e2dca057c372bd4d35a8468',
+        );
       } else {
         onTap();
       }

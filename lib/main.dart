@@ -4,6 +4,8 @@ import 'package:foodapp/app/modules/aboutscreenpage/controllers/aboutscreenpage_
 import 'package:foodapp/app/modules/addcartpageviews/controllers/addcartpageviews_controller.dart';
 import 'package:foodapp/app/modules/drawerpage/controllers/drawerpage_controller.dart';
 import 'package:foodapp/app/modules/googlepageview/controllers/googlepageview_controller.dart';
+import 'package:foodapp/app/modules/helpsupportpage/controllers/helpsupportpage_controller.dart';
+import 'package:foodapp/app/modules/myorderpage/controllers/myorderpage_controller.dart';
 import 'package:foodapp/app/modules/notificationspage/controllers/notificationspage_controller.dart';
 import 'package:foodapp/app/modules/onboardingscreen/controllers/onboardingscreen_controller.dart';
 import 'package:foodapp/app/modules/orderconfrompageview/controllers/orderconfrompageview_controller.dart';
@@ -19,6 +21,7 @@ void main() async {
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   // Register all controllers with GetX
   Get.put(HomeController());
+  Get.put(MyorderpageController());
   Get.put(ProfilescreenpageController());
   Get.put(ThemeController());
   Get.put(DrawerpageController());
@@ -29,6 +32,7 @@ void main() async {
   Get.put(NotificationspageController());
   Get.put(OnboardingscreenController());
   Get.put(GooglepageviewController());
+  Get.put(HelpsupportpageController());
 
   runApp(MyApp());
 }

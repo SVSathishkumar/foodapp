@@ -1,27 +1,42 @@
-import 'dart:io';
-
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:foodapp/app/data/services/api_profile.dart';
 
 class ProfilescreenpageController extends GetxController {
-  // Holds path to profile image, default asset path initially
+  // Observable variables
   var profileImage = 'assets/images/user_avatar.png'.obs;
-  var selectedLanguage = 'English'.obs; // Default language
+  var selectedLanguage = 'English'.obs;
   var userName = 'John Doe'.obs;
   var email = 'john.doe@example.com'.obs;
   var favoriteCuisine = 'Italian'.obs;
   var phone = '123-456-7890'.obs;
-  final List<dynamic> _items = [];
-
-  List<dynamic> get cartItems => _items;
 
   final ImagePicker _picker = ImagePicker();
+  final ApiProfile apiProfile = ApiProfile();
 
-  get phoneNumber => null;
+  @override
+  void onInit() {
+    super.onInit();
+    fetchAndSetUserDetails();
+  }
 
-  // Pick image from camera
+  // Fetch user details using hardcoded token
+  Future<void> fetchAndSetUserDetails() async {
+    try {
+      final userDetails = await apiProfile.fetchUserDetails();
+      userName.value = userDetails['name'] ?? userName.value;
+      email.value = userDetails['email'] ?? email.value;
+      phone.value = userDetails['phone_number'] ?? phone.value;
+      favoriteCuisine.value =
+          userDetails['favorite_cuisine'] ?? favoriteCuisine.value;
 
-  // Pick image from gallery (optional)
+      print('✅ User details loaded successfully');
+    } catch (e) {
+      print('❌ Error fetching user details: $e');
+    }
+  }
+
+  // Pick profile image from gallery
   Future<void> pickImageFromGallery() async {
     final picked = await _picker.pickImage(source: ImageSource.gallery);
     if (picked != null) {
@@ -29,12 +44,8 @@ class ProfilescreenpageController extends GetxController {
     }
   }
 
+  // Logout user
   void logout() {
     Get.offAllNamed('/login');
-  }
-
-  void addItem(dynamic item) {
-    _items.add(item);
-    update(); // If using GetX for UI updates
   }
 }

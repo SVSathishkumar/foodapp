@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:foodapp/app/modules/Calendereventpage/views/calendereventpage_view.dart';
 import 'package:foodapp/app/modules/aboutscreenpage/views/aboutscreenpage_view.dart';
 import 'package:foodapp/app/modules/feedbackpage/views/feedbackpage_view.dart';
+import 'package:foodapp/app/modules/myorderpage/views/myorderpage_view.dart';
 import 'package:foodapp/app/modules/orderconfrompageview/views/orderconfrompageview_view.dart';
 import 'package:foodapp/app/modules/orderhistorypage/views/orderhistorypage_view.dart';
 import 'package:foodapp/app/modules/profilescreenpage/views/profilescreenpage_view.dart';
@@ -72,7 +73,7 @@ class DrawerView extends GetView<DrawerpageController> {
                       backgroundImage: controller.profileImage.value != null
                           ? FileImage(controller.profileImage.value!)
                           : const AssetImage('assets/images/drawerlogo.jpg')
-                              as ImageProvider,
+                                as ImageProvider,
                     ),
                     Positioned(
                       bottom: 0,
@@ -126,7 +127,7 @@ class DrawerView extends GetView<DrawerpageController> {
               Icons.receipt_long,
               'My Orders',
               () {
-                Get.to(OrderConfirmViewpageView());
+                Get.to(MyorderpageView());
               },
               textScale,
               isDark,
@@ -155,11 +156,12 @@ class DrawerView extends GetView<DrawerpageController> {
               isDark,
               iconSize,
             ),
+
             buildDrawerTile(
               Icons.history,
               'Order History',
               () {
-                Get.to(OrderhistorypageView());
+                Get.to(() => OrderhistorypageView(orders: cartItems));
               },
               textScale,
               isDark,
@@ -179,7 +181,10 @@ class DrawerView extends GetView<DrawerpageController> {
               Icons.logout,
               'Logout',
               () {
-                showLogoutPopup(isDark: isDark);
+                showLogoutPopup(
+                  isDark: isDark,
+                  token: 'cbdccd38a0e526b29e2dca057c372bd4d35a8468',
+                );
               },
               textScale,
               isDark,
@@ -200,7 +205,11 @@ class DrawerView extends GetView<DrawerpageController> {
     double iconSize,
   ) {
     return ListTile(
-      leading: Icon(icon, color: isDark ? Colors.white : Colors.black, size: iconSize),
+      leading: Icon(
+        icon,
+        color: isDark ? Colors.white : Colors.black,
+        size: iconSize,
+      ),
       title: Text(
         label,
         style: GoogleFonts.poppins(

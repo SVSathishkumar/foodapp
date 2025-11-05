@@ -33,6 +33,10 @@ abstract class Routes {
   static const CALENDEREVENTPAGE = _Paths.CALENDEREVENTPAGE;
   static const BISLERIWATERPAGE = _Paths.BISLERIWATERPAGE;
   static const CATEGORYPAGE = _Paths.CATEGORYPAGE;
+  static const HELPSUPPORTPAGE = _Paths.HELPSUPPORTPAGE;
+  static const MYORDERPAGE = _Paths.MYORDERPAGE;
+  static const LOGINPAGE = _Paths.LOGINPAGE;
+  static const REGISTERPAGE = _Paths.REGISTERPAGE;
 }
 
 abstract class _Paths {
@@ -61,11 +65,14 @@ abstract class _Paths {
   static const CONESPAGESCREEN = '/conespagescreen';
   static const BARSSTICKSPAGE = '/barsstickspage';
   static const FAMILYPACKSPAGE = '/familypackspage';
-  static const DELIVERYTRACKINGPAGE = '/deliverytrackingpage';
   static const NOTIFICATIONSPAGE = '/notificationspage';
   static const TRACKINGPAGE = '/trackingpage';
   static const ORDERHISTORYPAGE = '/orderhistorypage';
   static const CALENDEREVENTPAGE = '/calendereventpage';
   static const BISLERIWATERPAGE = '/bisleriwaterpage';
   static const CATEGORYPAGE = '/categorypage';
+  static const HELPSUPPORTPAGE = '/helpsupportpage';
+  static const MYORDERPAGE = '/myorderpage';
+  static const LOGINPAGE = '/loginpage';
+  static const REGISTERPAGE = '/registerpage';
 }

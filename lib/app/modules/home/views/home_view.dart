@@ -71,6 +71,8 @@ class HomeView extends GetView<HomeController> {
     'assets/images/banner2.png',
   ];
 
+  
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -101,7 +103,7 @@ class HomeView extends GetView<HomeController> {
           children: [
             CircleAvatar(
               radius: width * 0.045,
-              backgroundImage: const AssetImage('assets/images/profile1.jpg'),
+              backgroundImage:  AssetImage('assets/images/profile1.jpg'),
             ),
             SizedBox(width: width * 0.03),
             Column(
@@ -415,7 +417,7 @@ class HomeView extends GetView<HomeController> {
 
     return GestureDetector(
       onTap: () => Get.to(
-        () => const ProductDetailsViewpageView(),
+        () =>  ProductDetailsViewpageView(),
         arguments: {
           'images': [item['image']],
           'title': item['title'],

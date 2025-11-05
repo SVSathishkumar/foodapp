@@ -2,17 +2,17 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:dash_chat_2/dash_chat_2.dart';
+import 'package:intl/intl.dart';
 
 class ChatbotpageController extends GetxController {
-  // Users
+  final DateTime nowInIST = DateTime.now().toUtc().add(const Duration(hours: 5, minutes: 30));
+  
   final ChatUser myself = ChatUser(id: '1', firstName: 'Tom');
   final ChatUser bot = ChatUser(id: '2', firstName: 'Gemini');
 
-  // Chat messages & typing
   final RxList<ChatMessage> allMessages = <ChatMessage>[].obs;
   final RxList<ChatUser> typing = <ChatUser>[].obs;
 
-  // Gemini API details
   final String apiUrl =
       'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=AIzaSyDP44VfvPWKWEvakEN222NJvyUnPqHz6TU';
 
@@ -20,29 +20,11 @@ class ChatbotpageController extends GetxController {
     'Content-Type': 'application/json',
   };
 
-  @override
-  void onInit() {
-    super.onInit();
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
-  }
-
-  /// Handles user message and Gemini API response
   Future<void> getData(ChatMessage message) async {
-    // Add user's message
-    allMessages.insert(0, message);
-    typing.add(bot);
-    update();
+    typing.add(bot);          // Show typing
+    allMessages.insert(0, message); // Add user message
 
-    final requestPayload = {
+    final Map<String, dynamic> data = {
       "contents": [
         {
           "parts": [
@@ -53,84 +35,55 @@ class ChatbotpageController extends GetxController {
     };
 
     try {
+      print('Sending request to API...');
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: headers,
-        body: jsonEncode(requestPayload),
+        body: jsonEncode(data),
       );
+
+      print('Response Status Code: ${response.statusCode}');
+      print('Response Body: ${response.body}');
 
       if (response.statusCode == 200) {
         final result = jsonDecode(response.body);
+        final String botReply = result['candidates'][0]['content']['parts'][0]['text'];
 
-        final String botReply =
-            result['candidates'][0]['content']['parts'][0]['text'];
-
-        final botMessage = ChatMessage(
-          user: bot,
-          createdAt: DateTime.now(),
+        final ChatMessage botMessage = ChatMessage(
           text: botReply,
+          user: bot,
+          createdAt: nowInIST,
         );
 
         allMessages.insert(0, botMessage);
-      } else {
-        allMessages.insert(
-          0,
-          ChatMessage(
-            user: bot,
-            createdAt: DateTime.now(),
-            text: "⚠️ Error ${response.statusCode}: Unable to get a response.",
-          ),
+      } else if (response.statusCode == 429) {
+        // Handle rate limit gracefully
+        final ChatMessage botMessage = ChatMessage(
+          text:
+              "⚠️ Too many requests. Please wait a few seconds and try again.",
+          user: bot,
+          createdAt: nowInIST,
         );
+        allMessages.insert(0, botMessage);
+      } else {
+        final ChatMessage botMessage = ChatMessage(
+          text: "⚠️ Error: ${response.statusCode}",
+          user: bot,
+          createdAt: nowInIST,
+        );
+        allMessages.insert(0, botMessage);
       }
     } catch (e) {
-      allMessages.insert(
-        0,
-        ChatMessage(
-          user: bot,
-          createdAt: DateTime.now(),
-          text: "❌ Exception: $e",
-        ),
+      final ChatMessage botMessage = ChatMessage(
+        text: "⚠️ Exception occurred: $e",
+        user: bot,
+        createdAt: nowInIST,
       );
+      allMessages.insert(0, botMessage);
     } finally {
-      typing.remove(bot);
+      typing.remove(bot); // Remove typing
+      print('Request completed.');
       update();
     }
-  }
-
-  /// Simulated image generation or echo logic (fallback/test)
-  void getDatas(ChatMessage message) {
-    allMessages.insert(0, message);
-    update();
-
-    if (message.text.toLowerCase().contains("generate image")) {
-      final imageUrl =
-          "https://placehold.co/300x300.png?text=Generated+Image"; // Replace with real image generation API
-
-      allMessages.insert(
-        0,
-        ChatMessage(
-          user: bot,
-          createdAt: DateTime.now(),
-          medias: [
-            ChatMedia(
-              url: imageUrl,
-              type: MediaType.image,
-              fileName: 'GeneratedImage.png',
-            )
-          ],
-        ),
-      );
-    } else {
-      allMessages.insert(
-        0,
-        ChatMessage(
-          user: bot,
-          createdAt: DateTime.now(),
-          text: "You said: ${message.text}",
-        ),
-      );
-    }
-
-    update();
   }
 }

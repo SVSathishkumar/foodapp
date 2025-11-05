@@ -94,7 +94,7 @@ class _AboutpageViewState extends State<AboutpageView>
                 color: Colors.transparent,
                 child: InkWell(
                   borderRadius: BorderRadius.circular(30),
-                  onTap: () => Get.to(BottomnavigationbarView()),
+                  onTap: () => Get.to(()=>BottomnavigationbarView()),
                   child: Container(
                     padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(

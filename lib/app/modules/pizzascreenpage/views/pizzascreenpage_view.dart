@@ -274,7 +274,7 @@ class PizzascreenpageView extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: padding, vertical: 10),
           child: AnimationLimiter(
             child: GridView.builder(
-              padding: const EdgeInsets.only(bottom: 20),
+              padding:  EdgeInsets.only(bottom: 20),
               itemCount: products.length,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: crossAxisCount,
@@ -287,7 +287,7 @@ class PizzascreenpageView extends StatelessWidget {
                 return AnimationConfiguration.staggeredGrid(
                   position: index,
                   columnCount: crossAxisCount,
-                  duration: const Duration(milliseconds: 500),
+                  duration:Duration(milliseconds: 500),
                   child: SlideAnimation(
                     verticalOffset: 50.0,
                     child: FadeInAnimation(

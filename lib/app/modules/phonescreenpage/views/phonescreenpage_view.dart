@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:foodapp/app/modules/bottomnavgationbar/views/bottomnavgationbar_view.dart';
-import 'package:foodapp/widgets/AuthService%20.dart';
+// import 'package:foodapp/app/modules/bottomnavgationbar/views/bottomnavgationbar_view.dart';
+// import 'package:foodapp/widgets/AuthService%20.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import '../controllers/phonescreenpage_controller.dart';
-import 'package:lottie/lottie.dart';
-import '../../home/views/home_view.dart'; // adjust as needed
+// import 'package:lottie/lottie.dart';
+// import '../../home/views/home_view.dart'; // adjust as needed
 
 class PhonescreenpageView extends GetView<PhonescreenpageController> {
   PhonescreenpageView({super.key});
@@ -17,7 +17,7 @@ class PhonescreenpageView extends GetView<PhonescreenpageController> {
     final theme = Theme.of(context);
     final size = MediaQuery.of(context).size;
     final isDark = theme.brightness == Brightness.dark;
-    final authService = AuthService();
+    // final authService = AuthService();
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -42,7 +42,7 @@ class PhonescreenpageView extends GetView<PhonescreenpageController> {
             child: LayoutBuilder(
               builder: (context, constraints) {
                 return SingleChildScrollView(
-                  physics:  BouncingScrollPhysics(),
+                  physics: BouncingScrollPhysics(),
                   child: ConstrainedBox(
                     constraints: BoxConstraints(
                       minHeight: constraints.maxHeight,
@@ -71,7 +71,8 @@ class PhonescreenpageView extends GetView<PhonescreenpageController> {
                               Text(
                                 'Please confirm your country code and\nenter your mobile number',
                                 style: GoogleFonts.poppins(
-                                   fontSize: MediaQuery.of(context).size.width * 0.029,
+                                  fontSize:
+                                      MediaQuery.of(context).size.width * 0.029,
                                   color: Colors.white,
                                 ),
                               ),
@@ -101,7 +102,7 @@ class PhonescreenpageView extends GetView<PhonescreenpageController> {
                                     ),
                                     borderRadius: BorderRadius.circular(30.0),
                                   ),
-                      
+
                                   // 👉 Error text color force white
                                   errorStyle: GoogleFonts.poppins(
                                     color: Colors.white,
@@ -110,11 +111,11 @@ class PhonescreenpageView extends GetView<PhonescreenpageController> {
                                         0.029, // Responsive
                                     fontWeight: FontWeight.w500,
                                   ),
-                      
+
                                   // 👉 Counter text (0/0) color force white
                                   counterStyle: GoogleFonts.poppins(
                                     color: Colors.white,
-                                   fontSize:
+                                    fontSize:
                                         MediaQuery.of(context).size.width *
                                         0.028, // Responsive
                                     fontWeight: FontWeight.w500,
@@ -134,7 +135,9 @@ class PhonescreenpageView extends GetView<PhonescreenpageController> {
                                 onChanged: (phone) {
                                   controller.phoneNumber.value =
                                       phone.completeNumber;
-                                  controller.validatePhone(phone.completeNumber);
+                                  controller.validatePhone(
+                                    phone.completeNumber,
+                                  );
                                 },
                               ),
                               SizedBox(height: size.height * 0.04),
@@ -151,7 +154,9 @@ class PhonescreenpageView extends GetView<PhonescreenpageController> {
                                           ? Colors.pinkAccent
                                           : Colors.pinkAccent.withOpacity(0.4),
                                       shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(30.0),
+                                        borderRadius: BorderRadius.circular(
+                                          30.0,
+                                        ),
                                       ),
                                     ),
                                     child: Text(
@@ -166,137 +171,136 @@ class PhonescreenpageView extends GetView<PhonescreenpageController> {
                                 ),
                               ),
                               SizedBox(height: size.height * 0.08),
-                      
+
                               // 👉 Biometric Button
-                              Center(
-                                child: ElevatedButton(
-                                  onPressed: () async {
-                                    final isAuthenticated = await authService
-                                        .authenticateWithBiometrics();
-                                    final isDark = Get.isDarkMode;
-                      
-                                    if (isAuthenticated) {
-                                      Get.snackbar(
-                                        "Success",
-                                        "Authenticated!",
-                                        icon: Padding(
-                                          padding: const EdgeInsets.only(top: 4),
-                                          child: SizedBox(
-                                            height: size.height * 0.05,
-                                            width: size.width * 0.1,
-                                            child: Lottie.asset(
-                                              'assets/images/fingerrorint.json',
-                                              repeat: false,
-                                              fit: BoxFit.contain,
-                                            ),
-                                          ),
-                                        ),
-                                        boxShadows: [
-                                          BoxShadow(
-                                            color: isDark
-                                                ? Colors.white.withOpacity(0.2)
-                                                : Colors.black.withOpacity(0.2),
-                                            blurRadius: 8,
-                                            offset: const Offset(0, 4),
-                                          ),
-                                        ],
-                                        backgroundColor: isDark
-                                            ? Colors.black
-                                            : Colors.white,
-                                        colorText: isDark
-                                            ? Colors.white
-                                            : Colors.black,
-                                        snackPosition: SnackPosition.TOP,
-                                        margin: EdgeInsets.all(size.width * 0.03),
-                                        borderRadius: 12,
-                                        duration: const Duration(seconds: 2),
-                                        titleText: Text(
-                                          "Success",
-                                          style: GoogleFonts.openSans(
-                                            fontSize: size.width * 0.04,
-                                            fontWeight: FontWeight.bold,
-                                            color: isDark
-                                                ? Colors.white
-                                                : Colors.black,
-                                          ),
-                                        ),
-                                        messageText: Text(
-                                          "Authenticated!",
-                                          style: GoogleFonts.openSans(
-                                            fontSize: size.width * 0.035,
-                                            color: isDark
-                                                ? Colors.white70
-                                                : Colors.black54,
-                                          ),
-                                        ),
-                                      );
-                                      Get.offAll(() => BottomnavigationbarView());
-                                    } else {
-                                      Get.snackbar(
-                                        "",
-                                        "Please try again",
-                                        icon: Padding(
-                                          padding: EdgeInsets.only(top: 4),
-                                          child: SizedBox(
-                                            height: size.height * 0.05,
-                                            width: size.width * 0.1,
-                                            child: Lottie.asset(
-                                              'assets/images/warining.json',
-                                              repeat: false,
-                                              fit: BoxFit.contain,
-                                            ),
-                                          ),
-                                        ),
-                                        boxShadows: [
-                                          BoxShadow(
-                                            color: isDark
-                                                ? Colors.white.withOpacity(0.2)
-                                                : Colors.black.withOpacity(0.2),
-                                            blurRadius: 8,
-                                            offset: const Offset(0, 4),
-                                          ),
-                                        ],
-                                        backgroundColor: isDark
-                                            ? Colors.black
-                                            : Colors.white,
-                                        colorText: isDark
-                                            ? Colors.white
-                                            : Colors.black,
-                                        snackPosition: SnackPosition.TOP,
-                                        margin: EdgeInsets.all(size.width * 0.03),
-                                        borderRadius: 12,
-                                        duration: const Duration(seconds: 2),
-                                        titleText: Text(
-                                          "Authentication Failed",
-                                          style: GoogleFonts.openSans(
-                                            fontSize: size.width * 0.04,
-                                            fontWeight: FontWeight.bold,
-                                            color: isDark
-                                                ? Colors.white
-                                                : Colors.black,
-                                          ),
-                                        ),
-                                      );
-                                    }
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Get.isDarkMode
-                                        ? Colors.grey[900]
-                                        : Colors.white,
-                                    shape: const CircleBorder(),
-                                    padding: const EdgeInsets.all(16),
-                                    elevation: 4,
-                                  ),
-                                  child: Icon(
-                                    Icons.fingerprint,
-                                    size: 30,
-                                    color: Get.isDarkMode
-                                        ? Colors.white
-                                        : Colors.black,
-                                  ),
-                                ),
-                              ),
-                      
+                              // Center(
+                              //   child: ElevatedButton(
+                              //     onPressed: () async {
+                              //       final isAuthenticated = await authService
+                              //           .authenticateWithBiometrics();
+                              //       final isDark = Get.isDarkMode;
+
+                              //       if (isAuthenticated) {
+                              //         Get.snackbar(
+                              //           "Success",
+                              //           "Authenticated!",
+                              //           icon: Padding(
+                              //             padding: const EdgeInsets.only(top: 4),
+                              //             child: SizedBox(
+                              //               height: size.height * 0.05,
+                              //               width: size.width * 0.1,
+                              //               child: Lottie.asset(
+                              //                 'assets/images/fingerrorint.json',
+                              //                 repeat: false,
+                              //                 fit: BoxFit.contain,
+                              //               ),
+                              //             ),
+                              //           ),
+                              //           boxShadows: [
+                              //             BoxShadow(
+                              //               color: isDark
+                              //                   ? Colors.white.withOpacity(0.2)
+                              //                   : Colors.black.withOpacity(0.2),
+                              //               blurRadius: 8,
+                              //               offset: const Offset(0, 4),
+                              //             ),
+                              //           ],
+                              //           backgroundColor: isDark
+                              //               ? Colors.black
+                              //               : Colors.white,
+                              //           colorText: isDark
+                              //               ? Colors.white
+                              //               : Colors.black,
+                              //           snackPosition: SnackPosition.TOP,
+                              //           margin: EdgeInsets.all(size.width * 0.03),
+                              //           borderRadius: 12,
+                              //           duration: const Duration(seconds: 2),
+                              //           titleText: Text(
+                              //             "Success",
+                              //             style: GoogleFonts.openSans(
+                              //               fontSize: size.width * 0.04,
+                              //               fontWeight: FontWeight.bold,
+                              //               color: isDark
+                              //                   ? Colors.white
+                              //                   : Colors.black,
+                              //             ),
+                              //           ),
+                              //           messageText: Text(
+                              //             "Authenticated!",
+                              //             style: GoogleFonts.openSans(
+                              //               fontSize: size.width * 0.035,
+                              //               color: isDark
+                              //                   ? Colors.white70
+                              //                   : Colors.black54,
+                              //             ),
+                              //           ),
+                              //         );
+                              //         Get.offAll(() => BottomnavigationbarView());
+                              //       } else {
+                              //         Get.snackbar(
+                              //           "",
+                              //           "Please try again",
+                              //           icon: Padding(
+                              //             padding: EdgeInsets.only(top: 4),
+                              //             child: SizedBox(
+                              //               height: size.height * 0.05,
+                              //               width: size.width * 0.1,
+                              //               child: Lottie.asset(
+                              //                 'assets/images/warining.json',
+                              //                 repeat: false,
+                              //                 fit: BoxFit.contain,
+                              //               ),
+                              //             ),
+                              //           ),
+                              //           boxShadows: [
+                              //             BoxShadow(
+                              //               color: isDark
+                              //                   ? Colors.white.withOpacity(0.2)
+                              //                   : Colors.black.withOpacity(0.2),
+                              //               blurRadius: 8,
+                              //               offset: const Offset(0, 4),
+                              //             ),
+                              //           ],
+                              //           backgroundColor: isDark
+                              //               ? Colors.black
+                              //               : Colors.white,
+                              //           colorText: isDark
+                              //               ? Colors.white
+                              //               : Colors.black,
+                              //           snackPosition: SnackPosition.TOP,
+                              //           margin: EdgeInsets.all(size.width * 0.03),
+                              //           borderRadius: 12,
+                              //           duration: const Duration(seconds: 2),
+                              //           titleText: Text(
+                              //             "Authentication Failed",
+                              //             style: GoogleFonts.openSans(
+                              //               fontSize: size.width * 0.04,
+                              //               fontWeight: FontWeight.bold,
+                              //               color: isDark
+                              //                   ? Colors.white
+                              //                   : Colors.black,
+                              //             ),
+                              //           ),
+                              //         );
+                              //       }
+                              //     },
+                              //     style: ElevatedButton.styleFrom(
+                              //       backgroundColor: Get.isDarkMode
+                              //           ? Colors.grey[900]
+                              //           : Colors.white,
+                              //       shape: const CircleBorder(),
+                              //       padding: const EdgeInsets.all(16),
+                              //       elevation: 4,
+                              //     ),
+                              //     child: Icon(
+                              //       Icons.fingerprint,
+                              //       size: 30,
+                              //       color: Get.isDarkMode
+                              //           ? Colors.white
+                              //           : Colors.black,
+                              //     ),
+                              //   ),
+                              // ),
                               const Spacer(),
                             ],
                           ),

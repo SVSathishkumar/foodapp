@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:foodapp/app/modules/bottomnavgationbar/views/bottomnavgationbar_view.dart';
 import 'package:foodapp/app/modules/orderconfrompageview/controllers/orderconfrompageview_controller.dart';
@@ -11,9 +12,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:geocoding/geocoding.dart';
 
 class TrackingpageView extends StatefulWidget {
-  final int currentStage;
-
-  const TrackingpageView({super.key, this.currentStage = 0});
+  const TrackingpageView({super.key});
 
   @override
   State<TrackingpageView> createState() => _TrackingpageViewState();
@@ -28,14 +27,24 @@ class _TrackingpageViewState extends State<TrackingpageView> {
 
   late List cartItems;
 
+  int currentStage = 0; // 0 = Order Placed
+  LatLng? courierLatLng;
+  Timer? trackingTimer;
+
   @override
   void initState() {
     super.initState();
-
     final args = Get.arguments as Map<String, dynamic>? ?? {};
-    cartItems = args['cartItems'] ?? [];
+    cartItems = (args['cartItems'] as List?) ?? [];
 
+    courierLatLng = pickupLatLng;
     _getDeliveryCoordinates();
+  }
+
+  @override
+  void dispose() {
+    trackingTimer?.cancel();
+    super.dispose();
   }
 
   Future<void> _getDeliveryCoordinates() async {
@@ -51,16 +60,49 @@ class _TrackingpageViewState extends State<TrackingpageView> {
             );
           });
 
-          if (mapController != null) {
-            mapController!.animateCamera(
-              CameraUpdate.newLatLngZoom(destinationLatLng!, 14),
-            );
-          }
+          _startLiveTracking();
         }
       }
     } catch (e) {
       debugPrint("Geocoding error: $e");
     }
+  }
+
+  void _startLiveTracking() {
+    if (destinationLatLng == null) return;
+
+    final double latStep =
+        (destinationLatLng!.latitude - pickupLatLng.latitude) / 20;
+    final double lngStep =
+        (destinationLatLng!.longitude - pickupLatLng.longitude) / 20;
+
+    int step = 0;
+    trackingTimer = Timer.periodic(const Duration(seconds: 2), (timer) {
+      if (step < 20) {
+        setState(() {
+          courierLatLng = LatLng(
+            pickupLatLng.latitude + latStep * step,
+            pickupLatLng.longitude + lngStep * step,
+          );
+          if (step == 5) currentStage = 1; // Order Received
+          if (step == 10) currentStage = 2; // Processing
+          if (step == 15) currentStage = 3; // On the Way
+        });
+
+        if (mapController != null && courierLatLng != null) {
+          mapController!.animateCamera(
+            CameraUpdate.newLatLng(courierLatLng!),
+          );
+        }
+        step++;
+      } else {
+        setState(() {
+          courierLatLng = destinationLatLng;
+          currentStage = 4; // Delivered
+        });
+        timer.cancel();
+      }
+    });
   }
 
   Future<void> _makeCall() async {
@@ -81,11 +123,9 @@ class _TrackingpageViewState extends State<TrackingpageView> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final size = MediaQuery.of(context).size;
 
-    // MediaQuery breakpoints
     final bool isTablet = size.width >= 600 && size.width < 1024;
     final bool isWeb = size.width >= 1024;
 
-    // Dynamic scaling
     double baseFont = isWeb
         ? 20
         : isTablet
@@ -136,6 +176,14 @@ class _TrackingpageViewState extends State<TrackingpageView> {
                     BitmapDescriptor.hueRed,
                   ),
                 ),
+              if (courierLatLng != null)
+                Marker(
+                  markerId: const MarkerId('courier'),
+                  position: courierLatLng!,
+                  icon: BitmapDescriptor.defaultMarkerWithHue(
+                    BitmapDescriptor.hueAzure,
+                  ),
+                ),
             },
             polylines: {
               if (destinationLatLng != null)
@@ -155,10 +203,7 @@ class _TrackingpageViewState extends State<TrackingpageView> {
             child: CircleAvatar(
               backgroundColor: primaryColor,
               child: IconButton(
-                icon: Icon(
-                  Icons.arrow_back,
-                  color: Colors.white,
-                ),
+                icon: const Icon(Icons.arrow_back, color: Colors.white),
                 onPressed: () => Get.to(() => BottomnavigationbarView()),
               ),
             ),
@@ -184,7 +229,6 @@ class _TrackingpageViewState extends State<TrackingpageView> {
                 ),
                 child: SingleChildScrollView(
                   controller: scrollController,
-                  padding: EdgeInsets.only(bottom: size.height * 0.01),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -199,8 +243,8 @@ class _TrackingpageViewState extends State<TrackingpageView> {
                           children: List.generate(steps.length, (index) {
                             bool isFirst = index == 0;
                             bool isLast = index == steps.length - 1;
-                            bool isCompleted = index < widget.currentStage;
-                            bool isCurrent = index == widget.currentStage;
+                            bool isCompleted = index < currentStage;
+                            bool isCurrent = index == currentStage;
 
                             Color indicatorColor;
                             if (isCompleted) {
@@ -236,7 +280,7 @@ class _TrackingpageViewState extends State<TrackingpageView> {
                                   thickness: 2,
                                 ),
                                 afterLineStyle: LineStyle(
-                                  color: index <= widget.currentStage
+                                  color: index <= currentStage
                                       ? Colors.green
                                       : Colors.grey,
                                   thickness: 2,
@@ -309,10 +353,11 @@ class _TrackingpageViewState extends State<TrackingpageView> {
                                 children: List.generate(
                                   cartItems.length,
                                   (index) {
-                                    final item = cartItems[index];
+                                    final item =
+                                        cartItems[index] as Map<String, dynamic>;
                                     return Container(
-                                      margin:
-                                          const EdgeInsets.symmetric(vertical: 6),
+                                      margin: const EdgeInsets.symmetric(
+                                          vertical: 6),
                                       decoration: BoxDecoration(
                                         border: Border.all(
                                           color: isDark
@@ -325,39 +370,39 @@ class _TrackingpageViewState extends State<TrackingpageView> {
                                             ? Colors.grey[900]
                                             : Colors.white,
                                         borderRadius: BorderRadius.circular(12),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color:
-                                                Colors.black.withOpacity(0.05),
-                                            blurRadius: 5,
-                                            offset: const Offset(0, 3),
-                                          ),
-                                        ],
                                       ),
                                       child: Padding(
                                         padding: EdgeInsets.all(
                                             paddingScale.toDouble()),
                                         child: Row(
                                           children: [
-                                            ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                              child: Image.asset(
-                                                item['image'] ?? '',
-                                                height: isWeb
-                                                    ? 120
-                                                    : isTablet
-                                                        ? 90
-                                                        : 70,
-                                                width: isWeb
-                                                    ? 120
-                                                    : isTablet
-                                                        ? 90
-                                                        : 70,
-                                                fit: BoxFit.cover,
+                                            if ((item['image'] ?? '').isNotEmpty)
+                                              ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                                child: Image.asset(
+                                                  item['image'],
+                                                  height: isWeb
+                                                      ? 120
+                                                      : isTablet
+                                                          ? 90
+                                                          : 70,
+                                                  width: isWeb
+                                                      ? 120
+                                                      : isTablet
+                                                          ? 90
+                                                          : 70,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              )
+                                            else
+                                              Container(
+                                                height: 70,
+                                                width: 70,
+                                                color: Colors.grey,
+                                                child: const Icon(Icons.image),
                                               ),
-                                            ),
-                                            SizedBox(width: 12),
+                                            const SizedBox(width: 12),
                                             Expanded(
                                               child: Column(
                                                 crossAxisAlignment:
@@ -372,7 +417,7 @@ class _TrackingpageViewState extends State<TrackingpageView> {
                                                       fontSize: baseFont,
                                                     ),
                                                   ),
-                                                  SizedBox(height: 5),
+                                                  const SizedBox(height: 5),
                                                   Text(
                                                     'Price: ${item['unitPrice']}',
                                                     style: GoogleFonts.poppins(
@@ -414,7 +459,7 @@ class _TrackingpageViewState extends State<TrackingpageView> {
                               backgroundImage:
                                   const AssetImage("assets/courier.png"),
                             ),
-                            SizedBox(width: 12),
+                            const SizedBox(width: 12),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -438,7 +483,7 @@ class _TrackingpageViewState extends State<TrackingpageView> {
                                     children: [
                                       const Icon(Icons.star,
                                           color: Colors.yellow, size: 16),
-                                      SizedBox(width: 4),
+                                      const SizedBox(width: 4),
                                       Text(
                                         "4.8",
                                         style: GoogleFonts.poppins(
@@ -509,7 +554,7 @@ class _TrackingpageViewState extends State<TrackingpageView> {
         Row(
           children: [
             Icon(icon, color: textColor, size: fontSize + 4),
-            SizedBox(width: 6),
+            const SizedBox(width: 6),
             Text(
               label,
               style: GoogleFonts.poppins(

@@ -29,8 +29,14 @@ import '../modules/feedbackpage/bindings/feedbackpage_binding.dart';
 import '../modules/feedbackpage/views/feedbackpage_view.dart';
 import '../modules/googlepageview/bindings/googlepageview_binding.dart';
 import '../modules/googlepageview/views/googlepageview_view.dart';
+import '../modules/helpsupportpage/bindings/helpsupportpage_binding.dart';
+import '../modules/helpsupportpage/views/helpsupportpage_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
+import '../modules/loginpage/bindings/loginpage_binding.dart';
+import '../modules/loginpage/views/loginpage_view.dart';
+import '../modules/myorderpage/bindings/myorderpage_binding.dart';
+import '../modules/myorderpage/views/myorderpage_view.dart';
 import '../modules/noodelsscreenpage/bindings/noodelsscreenpage_binding.dart';
 import '../modules/noodelsscreenpage/views/noodelsscreenpage_view.dart';
 import '../modules/notificationspage/bindings/notificationspage_binding.dart';
@@ -49,6 +55,8 @@ import '../modules/productdetailspage/bindings/productdetailspage_binding.dart';
 import '../modules/productdetailspage/views/productdetailspage_view.dart';
 import '../modules/profilescreenpage/bindings/profilescreenpage_binding.dart';
 import '../modules/profilescreenpage/views/profilescreenpage_view.dart';
+import '../modules/registerpage/bindings/registerpage_binding.dart';
+import '../modules/registerpage/views/registerpage_view.dart';
 import '../modules/splashscreenpage/bindings/splashscreenpage_binding.dart';
 import '../modules/splashscreenpage/views/splashscreenpage_view.dart';
 import '../modules/trackingpage/bindings/trackingpage_binding.dart';
@@ -59,7 +67,7 @@ part 'app_routes.dart';
 class AppPages {
   AppPages._();
 
-  static const INITIAL = Routes.SPLASHSCREENPAGE;
+  static const INITIAL = Routes.BOTTOMNAVGATIONBAR;
 
   static final routes = [
     GetPage(name: _Paths.HOME, page: () => HomeView(), binding: HomeBinding()),
@@ -73,7 +81,6 @@ class AppPages {
       page: () => BottomnavigationbarView(),
       binding: BottomnavgationbarBinding(),
     ),
-  
     GetPage(
       name: _Paths.ADDCARTPAGEVIEWS,
       page: () => AddcartpageviewsView(),
@@ -193,6 +200,26 @@ class AppPages {
       name: _Paths.CATEGORYPAGE,
       page: () => const CategorypageView(),
       binding: CategorypageBinding(),
+    ),
+    GetPage(
+      name: _Paths.HELPSUPPORTPAGE,
+      page: () => const HelpsupportpageView(),
+      binding: HelpsupportpageBinding(),
+    ),
+    GetPage(
+      name: _Paths.MYORDERPAGE,
+      page: () => const MyorderpageView(),
+      binding: MyorderpageBinding(),
+    ),
+    GetPage(
+      name: _Paths.LOGINPAGE,
+      page: () => const LoginpageView(),
+      binding: LoginpageBinding(),
+    ),
+    GetPage(
+      name: _Paths.REGISTERPAGE,
+      page: () => const RegisterpageView(),
+      binding: RegisterpageBinding(),
     ),
   ];
 }

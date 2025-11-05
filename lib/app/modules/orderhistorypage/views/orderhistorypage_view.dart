@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foodapp/app/modules/categorypage/views/categorypage_view.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:deleteable_tile/deleteable_tile.dart';
@@ -58,6 +59,7 @@ class OrderhistorypageView extends GetView<OrderhistorypageController> {
     final double smallFont = width * 0.032; // ID, date, etc.
     final double statusFont = width * 0.034;
     final double priceFont = width * 0.036;
+    final double buttonFont = width * 0.034;
 
     return Scaffold(
       backgroundColor: isDark ? Colors.black : Colors.grey[100],
@@ -97,28 +99,19 @@ class OrderhistorypageView extends GetView<OrderhistorypageController> {
                           Opacity(
                             opacity: 0.5,
                             child: Image.asset(
-                              "assets/images/orderhistorylogo.png", // your image path
-                              width: width * 0.3, // adjust size as needed
+                              "assets/images/orderhistorylogo.png",
+                              width: width * 0.3,
                               height: width * 0.3,
                               fit: BoxFit.contain,
                             ),
                           ),
-                          SizedBox(
-                            height: width * 0.07,
-                          ), // spacing between image and text
+                          SizedBox(height: width * 0.07),
                           Text(
                             "No orders\nLooks like you haven't placed any orders yet",
                             textAlign: TextAlign.center,
                             style: GoogleFonts.poppins(
-                              fontSize:
-                                  MediaQuery.of(context).size.width *
-                                  0.030, // responsive font
-                              color:
-                                  Theme.of(context).brightness ==
-                                      Brightness.dark
-                                  ? Colors
-                                        .white70 // dark mode
-                                  : Colors.black54, // light mode
+                              fontSize: width * 0.030,
+                              color: isDark ? Colors.white70 : Colors.black54,
                             ),
                           ),
                         ],
@@ -134,7 +127,6 @@ class OrderhistorypageView extends GetView<OrderhistorypageController> {
                         final item = orders[index];
                         final orderId = item['orderId'] ?? "#${index + 1}";
 
-                        /// Set side border color based on status
                         Color borderColor;
                         switch (item['status']?.toLowerCase()) {
                           case 'completed':
@@ -147,15 +139,13 @@ class OrderhistorypageView extends GetView<OrderhistorypageController> {
                             borderColor = Colors.orange;
                         }
 
-                        /// Delivery date variable
                         final deliveryDate = item['deliveryDate'];
 
                         return DeleteableTile(
                           key: ValueKey(orderId),
                           onDeleted: () {
-                            /// 🔹 if you want deletion to update state
                             orders.removeAt(index);
-                            controller.update(); // since GetX is used
+                            controller.update();
                           },
                           child: Container(
                             margin: EdgeInsets.only(bottom: height * 0.022),
@@ -258,7 +248,7 @@ class OrderhistorypageView extends GetView<OrderhistorypageController> {
                                   ),
                                   SizedBox(height: height * 0.01),
 
-                                  /// Delivery Date (conditionally shown)
+                                  /// Delivery Date
                                   if (deliveryDate != null)
                                     Row(
                                       children: [
@@ -279,6 +269,44 @@ class OrderhistorypageView extends GetView<OrderhistorypageController> {
                                         ),
                                       ],
                                     ),
+                                  SizedBox(height: height * 0.01),
+
+                                  /// 🔹 Reorder Button
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        Get.to(() => CategorypageView());
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: isDark
+                                            ? const Color.fromARGB(
+                                                255,
+                                                239,
+                                                201,
+                                                88,
+                                              )
+                                            : Colors.pink,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
+                                        ),
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: width * 0.05,
+                                          vertical: height * 0.012,
+                                        ),
+                                      ),
+                                      child: Text(
+                                        "Reorder",
+                                        style: GoogleFonts.poppins(
+                                          fontSize: buttonFont,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),

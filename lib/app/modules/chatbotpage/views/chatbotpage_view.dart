@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:foodapp/app/modules/bottomnavgationbar/views/bottomnavgationbar_view.dart';
 import 'package:foodapp/app/modules/chatbotpage/controllers/chatbotpage_controller.dart';
-import 'package:foodapp/app/modules/drawerpage/views/drawerpage_view.dart';
 import 'package:get/get.dart';
 import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -19,8 +18,8 @@ class ChatbotView extends GetView<ChatbotpageController> {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         backgroundColor: isDark
-            ? const Color.fromARGB(255, 5, 5, 5)
-            : const Color.fromARGB(255, 248, 233, 101),
+            ? const Color.fromARGB(255, 249, 211, 95)
+            : Colors.pink,
         elevation: 3,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),

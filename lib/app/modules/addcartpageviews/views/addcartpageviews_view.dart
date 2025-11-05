@@ -22,162 +22,173 @@ class AddcartpageviewsView extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         backgroundColor: isDark ? Colors.black : Colors.white,
-        body: Column(
-          children: [
-            /// CART ITEMS LIST
-            Expanded(
-              child: Obx(() {
-                return controller.cartItems.isEmpty
-                    ? _buildEmptyCart(isDark, context)
-                    : ListView.builder(
-                        padding: EdgeInsets.symmetric(
-                          vertical: height * 0.01,
-                          horizontal: width * 0.04,
-                        ),
-                        itemCount: controller.cartItems.length,
-                        itemBuilder: (context, index) {
-                          final item = controller.cartItems[index];
-                          final price = _parsePrice(item['unitPrice']);
-                          final quantity = int.tryParse(item['quantity']) ?? 1;
-                          final total = price * quantity;
+        body: LayoutBuilder(
+          builder: (context, constraints) {
+            return Column(
+              children: [
+                /// CART ITEMS LIST
+                Expanded(
+                  child: Obx(() {
+                    if (controller.cartItems.isEmpty) {
+                      return _buildEmptyCart(isDark, context);
+                    }
+                    return ListView.builder(
+                      padding: EdgeInsets.symmetric(
+                        vertical: constraints.maxHeight * 0.01,
+                        horizontal: constraints.maxWidth * 0.04,
+                      ),
+                      itemCount: controller.cartItems.length,
+                      itemBuilder: (context, index) {
+                        final item = controller.cartItems[index];
+                        final price = _parsePrice(item['unitPrice']);
+                        final quantity = int.tryParse(item['quantity']) ?? 1;
+                        final total = price * quantity;
+                        return _buildCartTile(
+                          context,
+                          item,
+                          index,
+                          controller,
+                          price,
+                          quantity,
+                          total,
+                          isDark,
+                          constraints.maxWidth,
+                          constraints.maxHeight,
+                          isTablet,
+                          isWeb,
+                        );
+                      },
+                    );
+                  }),
+                ),
 
-                          return _buildCartTile(
-                            context,
-                            item,
-                            index,
-                            controller,
-                            price,
-                            quantity,
-                            total,
-                            isDark,
-                            width,
-                            height,
-                            isTablet,
-                            isWeb,
-                          );
-                        },
-                      );
-              }),
-            ),
-
-            /// TOTAL & CHECKOUT
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-              child: Obx(() {
-                return Container(
-                  padding: EdgeInsets.all(
-                    isWeb
-                        ? 28
-                        : isTablet
+                /// TOTAL & CHECKOUT
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: constraints.maxWidth * 0.05,
+                  ),
+                  child: Obx(() {
+                    final sliderHeight =
+                        (MediaQuery.of(context).size.height * 0.06).clamp(
+                          43.0,
+                          48.0,
+                        );
+                    return Container(
+                      padding: EdgeInsets.all(
+                        isWeb
+                            ? 28
+                            : isTablet
                             ? 24
                             : 20,
-                  ),
-                  decoration: BoxDecoration(
-                    color: isDark ? Colors.grey[900] : Colors.grey.shade100,
-                    borderRadius: BorderRadius.circular(
-                      MediaQuery.of(context).size.width * 0.05,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 8,
-                        offset: const Offset(2, 4),
                       ),
-                    ],
-                    border: Border.all(
-                      color: isDark
-                          ? const Color.fromARGB(246, 243, 206, 151)
-                          : Colors.grey.shade400.withOpacity(0.4),
-                      width: 0.4,
-                    ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildPriceRow(
-                        label: 'Subtotal:',
-                        value:
-                            '₹${controller.subTotal.value.toStringAsFixed(2)}',
-                      ),
-                      SizedBox(height: isTablet ? 12 : 8),
-                      Divider(
-                        thickness: 1,
-                        color: isDark ? Colors.white : Colors.black,
-                      ),
-                      SizedBox(height: isTablet ? 12 : 8),
-                      _buildPriceRow(
-                        label: 'Total:',
-                        value:
-                            '₹${controller.totalWithDiscount.value.toStringAsFixed(2)}',
-                        valueColor: Colors.blue,
-                      ),
-                      SizedBox(height: isTablet ? 28 : 20),
-
-                      /// CHECKOUT SLIDER
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: MediaQuery.of(context).size.width * 0.02,
+                      decoration: BoxDecoration(
+                        color: isDark ? Colors.grey[900] : Colors.grey.shade100,
+                        borderRadius: BorderRadius.circular(
+                          constraints.maxWidth * 0.05,
                         ),
-                        child: ActionSlider.standard(
-                          backgroundColor: isDark
-                              ? Colors.orange.shade300
-                              : Colors.pinkAccent,
-                          toggleColor: Colors.white,
-                          icon: Icon(
-                            Icons.shopping_bag,
-                            color: isDark
-                                ? Colors.orange.shade300
-                                : Colors.pinkAccent,
-                            size: MediaQuery.of(context).size.width * 0.06,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 8,
+                            offset: const Offset(2, 4),
                           ),
-                          successIcon: CircleAvatar(
-                            radius: MediaQuery.of(context).size.width * 0.035,
-                            backgroundColor:
-                                isDark ? Colors.white : Colors.black,
-                            child: Icon(
-                              Icons.check,
-                              color: isDark ? Colors.black : Colors.white,
-                              size: MediaQuery.of(context).size.width * 0.045,
-                            ),
+                        ],
+                        border: Border.all(
+                          color: isDark
+                              ? const Color.fromARGB(246, 243, 206, 151)
+                              : Colors.grey.shade400.withOpacity(0.4),
+                          width: 0.4,
+                        ),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildPriceRow(
+                            label: 'Subtotal:',
+                            value:
+                                '₹${controller.subTotal.value.toStringAsFixed(2)}',
                           ),
-                          child: Text(
-                            'Checkout',
-                            style: GoogleFonts.poppins(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
-                            ),
+                          SizedBox(height: isTablet ? 12 : 8),
+                          Divider(
+                            thickness: 1,
+                            color: isDark ? Colors.white : Colors.black,
                           ),
-                          height: math.max(
-                              MediaQuery.of(context).size.height * 0.065, 50),
-                          action: (sliderController) async {
-                            sliderController.loading();
-                            await Future.delayed(
-                              const Duration(milliseconds: 800),
-                            );
-                            sliderController.success();
-                            await Future.delayed(
-                              const Duration(milliseconds: 2000),
-                            );
-                            sliderController.reset();
+                          SizedBox(height: isTablet ? 12 : 8),
+                          _buildPriceRow(
+                            label: 'Total:',
+                            value:
+                                '₹${controller.totalWithDiscount.value.toStringAsFixed(2)}',
+                            valueColor: Colors.blue,
+                          ),
+                          SizedBox(height: isTablet ? 28 : 20),
 
-                            Get.to(
-                              () => OrderConfirmViewpageView(),
-                              arguments: {
-                                'cartItems': controller.cartItems,
-                                'total': controller.totalWithDiscount.value,
+                          /// CHECKOUT SLIDER
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: constraints.maxWidth * 0.02,
+                            ),
+                            child: ActionSlider.standard(
+                              backgroundColor: isDark
+                                  ? Colors.orange.shade300
+                                  : Colors.pinkAccent,
+                              toggleColor: Colors.white,
+                              icon: Icon(
+                                Icons.shopping_bag,
+                                color: isDark
+                                    ? Colors.orange.shade300
+                                    : Colors.pinkAccent,
+                                size: constraints.maxWidth * 0.06,
+                              ),
+                              successIcon: CircleAvatar(
+                                radius: constraints.maxWidth * 0.035,
+                                backgroundColor: isDark
+                                    ? Colors.white
+                                    : Colors.black,
+                                child: Icon(
+                                  Icons.check,
+                                  color: isDark ? Colors.black : Colors.white,
+                                  size: constraints.maxWidth * 0.045,
+                                ),
+                              ),
+                              child: Text(
+                                'Checkout',
+                                style: GoogleFonts.poppins(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                ),
+                              ),
+                              height: sliderHeight,
+                              action: (sliderController) async {
+                                sliderController.loading();
+                                await Future.delayed(
+                                  const Duration(milliseconds: 800),
+                                );
+                                sliderController.success();
+                                await Future.delayed(
+                                  const Duration(milliseconds: 2000),
+                                );
+                                sliderController.reset();
+                                Get.to(
+                                  () => OrderConfirmViewpageView(),
+                                  arguments: {
+                                    'cartItems': controller.cartItems,
+                                    'total': controller.totalWithDiscount.value,
+                                  },
+                                );
                               },
-                            );
-                          },
-                        ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                );
-              }),
-            ),
-            SizedBox(height: isTablet ? 18 : 12),
-          ],
+                    );
+                  }),
+                ),
+
+                SizedBox(height: isTablet ? 18 : 12),
+              ],
+            );
+          },
         ),
       ),
     );
@@ -201,13 +212,13 @@ class AddcartpageviewsView extends StatelessWidget {
               height: isWeb
                   ? height * 0.25
                   : isTablet
-                      ? height * 0.22
-                      : height * 0.2,
+                  ? height * 0.22
+                  : height * 0.2,
               width: isWeb
                   ? width * 0.3
                   : isTablet
-                      ? width * 0.35
-                      : width * 0.4,
+                  ? width * 0.35
+                  : width * 0.4,
               fit: BoxFit.contain,
             ),
           ),
@@ -218,8 +229,8 @@ class AddcartpageviewsView extends StatelessWidget {
               fontSize: isWeb
                   ? 18
                   : isTablet
-                      ? 16
-                      : 14,
+                  ? 16
+                  : 14,
               fontWeight: FontWeight.w600,
               color: isDark ? Colors.white : Colors.black,
             ),
@@ -232,8 +243,8 @@ class AddcartpageviewsView extends StatelessWidget {
               fontSize: isWeb
                   ? 14
                   : isTablet
-                      ? 13
-                      : 12,
+                  ? 13
+                  : 12,
               color: isDark ? Colors.grey[400] : Colors.grey[600],
             ),
           ),
@@ -289,13 +300,13 @@ class AddcartpageviewsView extends StatelessWidget {
                 width: isWeb
                     ? width * 0.15
                     : isTablet
-                        ? width * 0.22
-                        : width * 0.25,
+                    ? width * 0.22
+                    : width * 0.25,
                 height: isWeb
                     ? height * 0.14
                     : isTablet
-                        ? height * 0.13
-                        : height * 0.12,
+                    ? height * 0.13
+                    : height * 0.12,
                 fit: BoxFit.cover,
               ),
             ),
@@ -316,8 +327,8 @@ class AddcartpageviewsView extends StatelessWidget {
                       fontSize: isWeb
                           ? 16
                           : isTablet
-                              ? 14
-                              : 13,
+                          ? 14
+                          : 13,
                       color: isDark ? Colors.white : Colors.black,
                     ),
                   ),
@@ -429,8 +440,8 @@ class AddcartpageviewsView extends StatelessWidget {
                   fontSize: isWeb
                       ? width * 0.022
                       : isTablet
-                          ? width * 0.028
-                          : width * 0.033,
+                      ? width * 0.028
+                      : width * 0.033,
                   color: isDark ? Colors.white : const Color(0xFF1E1E1E),
                 ),
               ),
@@ -442,8 +453,8 @@ class AddcartpageviewsView extends StatelessWidget {
               fontSize: isWeb
                   ? width * 0.020
                   : isTablet
-                      ? width * 0.025
-                      : width * 0.030,
+                  ? width * 0.025
+                  : width * 0.030,
               fontWeight: FontWeight.bold,
               color: isDark
                   ? Colors.white70
@@ -530,8 +541,8 @@ class AddcartpageviewsView extends StatelessWidget {
                 fontSize: isWeb
                     ? 16
                     : isTablet
-                        ? 15
-                        : 14,
+                    ? 15
+                    : 14,
                 color: isDark ? Colors.white70 : Colors.black87,
               ),
             ),
@@ -542,8 +553,8 @@ class AddcartpageviewsView extends StatelessWidget {
                 fontSize: isWeb
                     ? 17
                     : isTablet
-                        ? 16
-                        : 15,
+                    ? 16
+                    : 15,
                 color: valueColor ?? (isDark ? Colors.white : Colors.black),
               ),
             ),

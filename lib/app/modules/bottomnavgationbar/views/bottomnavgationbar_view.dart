@@ -25,10 +25,22 @@ class _BottomnavigationbarViewState extends State<BottomnavigationbarView> {
     ProfilescreenpageView(),
   ];
 
+  bool get isDark => Theme.of(Get.context!).brightness == Brightness.dark;
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  Future<bool> _onWillPop() async {
+    if (_selectedIndex != 0) {
+      setState(() {
+        _selectedIndex = 0;
+      });
+      return false; // prevent exiting app
+    }
+    return true; // exit app when on Home tab
   }
 
   @override
@@ -37,87 +49,77 @@ class _BottomnavigationbarViewState extends State<BottomnavigationbarView> {
     final width = size.width;
     final textScale = MediaQuery.of(context).textScaleFactor;
 
-    return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: AppBar(
-        leading: _selectedIndex == 3
-            ? null
-            : IconButton(
-                icon: Icon(
-                  Icons.arrow_back,
-                  color: Colors.pink,
-                  size: width * 0.06, // ✅ Responsive back button
-                ),
-                onPressed: () {
-                  setState(() {
-                    _selectedIndex = 0;
-                  });
-                },
-              ),
-        automaticallyImplyLeading: false,
-        backgroundColor: Get.isDarkMode
-            ? const Color.fromARGB(255, 18, 17, 17)
-            : Colors.white,
-        elevation: 0,
-        title: (_selectedIndex == 0)
-            ? Row(
-                children: [
-                  IconButton(
-                    icon: Icon(
-                      Icons.location_on,
-                      size: width * 0.050, // ✅ Responsive icon size
-                      color: Colors.blue,
-                    ),
-                    onPressed: () {
-                      Get.to(GooglepageviewView());
-                    },
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(),
-                  ),
-                   SizedBox(width:1,),
-                  Expanded(
-                    child: Text(
-                      "623707 Select delivery location",
-                      style: GoogleFonts.poppins(
-                        fontSize: width * 0.032 * textScale, // ✅ Responsive text
-                        fontWeight: FontWeight.bold,
-                        color: const Color.fromARGB(255, 201, 202, 202),
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ],
-              )
-            : const SizedBox(),
-      ),
-
-      body: _screens[_selectedIndex],
-      bottomNavigationBar: CurvedBottomNavigationBar(
-        selectedIndex: _selectedIndex,
-        onItemTapped: _onItemTapped,
-        icons: const [
-          Icons.home,
-          Icons.shopping_cart,
-          Icons.favorite,
-          Icons.person,
-        ],
-        labels: const ['Home', 'Cart', 'Favorite', 'Profile'],
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        selectedIconColor: Theme.of(context).brightness == Brightness.dark
-            ? Colors.amber.shade200
-            : Colors.pink,
-        unselectedIconColor: Theme.of(context).brightness == Brightness.dark
-            ? const Color.fromARGB(255, 233, 231, 231)
-            : const Color.fromARGB(255, 160, 160, 160),
-        selectedItemFontStyle: GoogleFonts.raleway(
-          fontSize: width * 0.035 * textScale, // ✅ Responsive font
-          color: Theme.of(context).brightness == Brightness.dark
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: Get.isDarkMode
+              ? Color.fromARGB(255, 18, 17, 17)
+              : Colors.white,
+          elevation: 0,
+          title: (_selectedIndex == 0)
+              ? Row(
+                  children: [
+                    IconButton(
+                      icon: Icon(
+                        Icons.location_on,
+                        size: width * 0.050,
+                        color: isDark
+                            ? Colors.pink
+                            : const Color.fromARGB(255, 250, 209, 84),
+                      ),
+                      onPressed: () {
+                        Get.to(GooglepageviewView());
+                      },
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                    ),
+                    const SizedBox(width: 1),
+                    Expanded(
+                      child: Text(
+                        "623707 Select delivery location",
+                        style: GoogleFonts.poppins(
+                          fontSize: width * 0.032 * textScale,
+                          fontWeight: FontWeight.bold,
+                          color: const Color.fromARGB(255, 201, 202, 202),
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                )
+              : const SizedBox(),
+        ),
+        body: _screens[_selectedIndex],
+        bottomNavigationBar: CurvedBottomNavigationBar(
+          selectedIndex: _selectedIndex,
+          onItemTapped: _onItemTapped,
+          icons: const [
+            Icons.home,
+            Icons.shopping_cart,
+            Icons.favorite,
+            Icons.person,
+          ],
+          labels: const ['Home', 'Cart', 'Favorite', 'Profile'],
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          selectedIconColor: Theme.of(context).brightness == Brightness.dark
               ? Colors.amber.shade200
               : Colors.pink,
-          fontWeight: FontWeight.bold,
-        ),
-        unselectedItemFontStyle: TextStyle(
-          fontSize: width * 0.032 * textScale,
+          unselectedIconColor: Theme.of(context).brightness == Brightness.dark
+              ? const Color.fromARGB(255, 233, 231, 231)
+              : const Color.fromARGB(255, 160, 160, 160),
+          selectedItemFontStyle: GoogleFonts.raleway(
+            fontSize: width * 0.035 * textScale,
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Colors.amber.shade200
+                : Colors.pink,
+            fontWeight: FontWeight.bold,
+          ),
+          unselectedItemFontStyle: TextStyle(
+            fontSize: width * 0.032 * textScale,
+          ),
         ),
       ),
     );
@@ -154,9 +156,7 @@ class CurvedBottomNavigationBar extends StatelessWidget {
     final textScale = MediaQuery.of(context).textScaleFactor;
 
     return Container(
-      padding: EdgeInsets.symmetric(
-        vertical: width * 0.03, // ✅ Responsive padding
-      ),
+      padding: EdgeInsets.symmetric(vertical: width * 0.03),
       decoration: BoxDecoration(
         color: backgroundColor,
         borderRadius: const BorderRadius.only(
@@ -182,7 +182,7 @@ class CurvedBottomNavigationBar extends StatelessWidget {
               children: [
                 Icon(
                   icons[index],
-                  size: width * 0.07, // ✅ Responsive icon size
+                  size: width * 0.07,
                   color: isSelected ? selectedIconColor : unselectedIconColor,
                 ),
                 const SizedBox(height: 4),
@@ -190,9 +190,11 @@ class CurvedBottomNavigationBar extends StatelessWidget {
                   labels[index],
                   style: isSelected
                       ? selectedItemFontStyle.copyWith(
-                          fontSize: width * 0.035 * textScale)
+                          fontSize: width * 0.035 * textScale,
+                        )
                       : unselectedItemFontStyle.copyWith(
-                          fontSize: width * 0.032 * textScale),
+                          fontSize: width * 0.032 * textScale,
+                        ),
                 ),
               ],
             ),

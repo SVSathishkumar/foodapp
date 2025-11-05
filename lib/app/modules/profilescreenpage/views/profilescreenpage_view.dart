@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:foodapp/app/modules/helpsupportpage/views/helpsupportpage_view.dart';
 import 'package:foodapp/app/modules/notificationspage/views/notificationspage_view.dart';
 import 'package:foodapp/app/modules/orderhistorypage/views/orderhistorypage_view.dart';
 import 'package:foodapp/app/modules/profilescreenpage/controllers/profilescreenpage_controller.dart';
@@ -486,7 +487,7 @@ class ProfilescreenpageView extends GetView<ProfilescreenpageController> {
             _buildMenuTile(
               icon: Icons.help_outline,
               title: "Help & Support",
-              onTap: () => Get.toNamed('/help'),
+              onTap: () => Get.to(HelpsupportpageView()),
               context: context,
             ),
             _buildMenuTile(

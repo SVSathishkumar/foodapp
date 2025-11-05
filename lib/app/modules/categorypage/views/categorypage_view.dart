@@ -9,24 +9,59 @@ import 'package:foodapp/app/modules/pizzascreenpage/views/pizzascreenpage_view.d
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:animations/animations.dart';
-
 import '../controllers/categorypage_controller.dart';
 
-class CategorypageView extends GetView<CategorypageController> {
+class CategorypageView extends StatefulWidget {
   const CategorypageView({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final categories = [
-      {"name": "Vegetables", "items": "25 items", "image": "assets/images/cartegories.png"},
-      {"name": "Fruits", "items": "30 items", "image": "assets/images/cartegories1.png"},
-      {"name": "Ice Cream", "items": "30 items", "image": "assets/images/cartegories2.png"},
-      {"name": "Cones", "items": "44 items", "image": "assets/images/cartegories3.png"},
-      {"name": "Bars & Sticks", "items": "30 items", "image": "assets/images/cartegories4.png"},
-      {"name": "Family Packs", "items": "18 items", "image": "assets/images/cartegories6.png"},
-      {"name": "Bisleri Water", "items": "10 items", "image": "assets/images/cartegories5.png"},
-    ];
+  State<CategorypageView> createState() => _CategorypageViewState();
+}
 
+class _CategorypageViewState extends State<CategorypageView> {
+  bool isSearching = false;
+  String query = "";
+
+  final categories = [
+    {
+      "name": "Vegetables",
+      "items": "25 items",
+      "image": "assets/images/cartegories.png",
+    },
+    {
+      "name": "Fruits",
+      "items": "30 items",
+      "image": "assets/images/cartegories1.png",
+    },
+    {
+      "name": "Ice Cream",
+      "items": "30 items",
+      "image": "assets/images/cartegories2.png",
+    },
+    {
+      "name": "Cones",
+      "items": "44 items",
+      "image": "assets/images/cartegories3.png",
+    },
+    {
+      "name": "Bars & Sticks",
+      "items": "30 items",
+      "image": "assets/images/cartegories4.png",
+    },
+    {
+      "name": "Family Packs",
+      "items": "18 items",
+      "image": "assets/images/cartegories6.png",
+    },
+    {
+      "name": "Bisleri Water",
+      "items": "10 items",
+      "image": "assets/images/cartegories5.png",
+    },
+  ];
+
+  @override
+  Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
@@ -39,8 +74,16 @@ class CategorypageView extends GetView<CategorypageController> {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
+    // 🔎 Filter categories
+    final filteredCategories = categories
+        .where(
+          (cat) => cat["name"]!.toLowerCase().contains(query.toLowerCase()),
+        )
+        .toList();
+
     return Scaffold(
       backgroundColor: isDark ? theme.scaffoldBackgroundColor : Colors.white,
+
       appBar: AppBar(
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
@@ -48,22 +91,65 @@ class CategorypageView extends GetView<CategorypageController> {
             bottomRight: Radius.circular(20),
           ),
         ),
-        backgroundColor: isDark ? const Color.fromARGB(255, 250, 210, 89) : Colors.pink,
+        backgroundColor: isDark
+            ? const Color.fromARGB(255, 250, 210, 89)
+            : Colors.pink,
         elevation: 0,
-        title: Text(
-          "Categories",
-          style: GoogleFonts.poppins(
-            fontSize: screenWidth * 0.04,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ),
+        title: isSearching
+            ? Container(
+                padding: EdgeInsets.symmetric(horizontal: 12),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: TextField(
+                  autofocus: true,
+                  onChanged: (val) {
+                    setState(() => query = val);
+                  },
+                  style: GoogleFonts.poppins(
+                    color: Colors.white,
+                    fontSize: screenWidth * 0.04,
+                  ),
+                  cursorColor: Colors.white,
+                  decoration: InputDecoration(
+                    hintText: "Search...",
+                    hintStyle: GoogleFonts.poppins(color: Colors.white70),
+                    border: InputBorder.none,
+                  ),
+                ),
+              )
+            : Text(
+                "Categories",
+                style: GoogleFonts.poppins(
+                  fontSize: screenWidth * 0.04,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
         leading: IconButton(
           onPressed: () => Get.back(),
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon:  Icon(Icons.arrow_back, color: Colors.white),
         ),
+
+        actions:[
+          IconButton(
+            onPressed: () {
+              setState(() {
+                isSearching = !isSearching;
+                query = "";
+              });
+            },
+            icon: Icon(
+              isSearching ? Icons.close : Icons.search,
+              color: Colors.white,
+            ),
+          ),
+        ],
+
         centerTitle: true,
       ),
+
       body: Container(
         decoration: BoxDecoration(
           color: isDark ? theme.scaffoldBackgroundColor : Colors.grey.shade100,
@@ -74,11 +160,10 @@ class CategorypageView extends GetView<CategorypageController> {
         ),
         child: ListView.builder(
           padding: EdgeInsets.all(screenWidth * 0.04),
-          itemCount: categories.length,
+          itemCount: filteredCategories.length,
           itemBuilder: (context, index) {
-            final category = categories[index];
+            final category = filteredCategories[index];
 
-            // Target screen based on category
             Widget getTargetScreen() {
               switch (category["name"]) {
                 case 'Vegetables':
@@ -97,25 +182,26 @@ class CategorypageView extends GetView<CategorypageController> {
                   return bisleriWaterPageView();
                 default:
                   return Scaffold(
-                    appBar: AppBar(title:  Text("Coming Soon")),
-                    body: const Center(child: Text("This category is not ready yet")),
+                    appBar: AppBar(title: const Text("Coming Soon")),
+                    body: const Center(
+                      child: Text("This category is not ready yet"),
+                    ),
                   );
               }
             }
 
-            // 🎬 Animation: slide from top with delay
             return TweenAnimationBuilder(
               tween: Tween<Offset>(
-                begin: const Offset(0, -0.5), // start slightly above
+                begin: const Offset(0, -0.5),
                 end: Offset.zero,
               ),
-              duration: Duration(milliseconds: 2100 + (index * 100)), // stagger
+              duration: Duration(milliseconds: 1200 + (index * 100)),
               curve: Curves.easeOutBack,
               builder: (context, Offset offset, child) {
                 return Transform.translate(
-                  offset: offset * 120, // pixel shift
+                  offset: offset * 120,
                   child: Opacity(
-                    opacity: 1 - offset.dy.abs()*0.8,
+                    opacity: 1 - offset.dy.abs() * 0.8,
                     child: child,
                   ),
                 );
@@ -168,7 +254,9 @@ class CategorypageView extends GetView<CategorypageController> {
                                       style: GoogleFonts.poppins(
                                         fontWeight: FontWeight.w600,
                                         fontSize: titleSize,
-                                        color: isDark ? Colors.white : Colors.black87,
+                                        color: isDark
+                                            ? Colors.white
+                                            : Colors.black87,
                                       ),
                                     ),
                                     SizedBox(height: spacing),
@@ -188,17 +276,10 @@ class CategorypageView extends GetView<CategorypageController> {
                               Container(
                                 padding: EdgeInsets.all(screenWidth * 0.02),
                                 decoration: BoxDecoration(
-                                  color: isDark ? const Color(0xFFF9D25D) : Colors.pink,
+                                  color: isDark
+                                      ? const Color(0xFFF9D25D)
+                                      : Colors.pink,
                                   shape: BoxShape.circle,
-                                  boxShadow: isDark
-                                      ? []
-                                      : [
-                                          BoxShadow(
-                                            color: Colors.black26,
-                                            blurRadius: screenWidth * 0.025,
-                                            offset: const Offset(2, 2),
-                                          ),
-                                        ],
                                 ),
                                 child: Icon(
                                   Icons.arrow_forward_ios,
@@ -210,7 +291,7 @@ class CategorypageView extends GetView<CategorypageController> {
                           ),
                         ),
                         Positioned(
-                          left:-2,
+                          left: -2,
                           top: -2,
                           child: CircleAvatar(
                             radius: avatarRadius,
