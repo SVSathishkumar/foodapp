@@ -54,6 +54,7 @@ dependencies:
   android_intent_plus: ^5.3.1
   font_awesome_flutter: ^10.10.0
   animations: ^2.0.11
+  flutter_login: ^5.1.0
 
 dev_dependencies:
   flutter_test:
@@ -301,6 +302,9 @@ flutter_icons:
     - assets\images\googlemapicons.png
     - assets\images\Bisleri8.png
     - assets\images\Bisleriwater9.jpg
+    - assets\images\registerpage.jpg
+    - assets\images\Success.json
+    - assets\images\Failed.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
