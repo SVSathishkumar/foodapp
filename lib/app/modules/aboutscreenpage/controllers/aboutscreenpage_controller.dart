@@ -9,6 +9,7 @@ class AboutpageController extends GetxController {
 
   @override
   void onInit() {
+    
     super.onInit();
 emailRecognizer = TapGestureRecognizer()
   ..onTap = () async {
